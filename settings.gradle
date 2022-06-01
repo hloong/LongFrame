@@ -1,0 +1,3 @@
+include ':LongLog'
+include ':app'
+rootProject.name = "LongFrame"
