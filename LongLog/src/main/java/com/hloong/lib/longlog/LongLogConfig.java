@@ -1,4 +1,4 @@
-package com.hloong.longlog;
+package com.hloong.lib.longlog;
 
 public abstract class LongLogConfig {
     static int MAX_LEN = 512;

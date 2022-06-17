@@ -2,9 +2,10 @@ package com.hloong.frame
 
 import android.app.Application
 import com.google.gson.Gson
-import com.hloong.longlog.LongConsolePrinter
-import com.hloong.longlog.LongLogConfig
-import com.hloong.longlog.LongLogManager
+import com.hloong.lib.longlog.LongConsolePrinter
+import com.hloong.lib.longlog.LongFilePrinter
+import com.hloong.lib.longlog.LongLogConfig
+import com.hloong.lib.longlog.LongLogManager
 
 class LongApp:Application(){
     override fun onCreate() {
@@ -16,9 +17,13 @@ class LongApp:Application(){
             override fun getGlobalTag(): String {
                 return "LongApp"
             }
+
+            override fun includeThread(): Boolean {
+                return true
+            }
             override fun enable(): Boolean {
                 return true
             }
-        },LongConsolePrinter())
+        },LongConsolePrinter(),LongFilePrinter.getInstance(cacheDir.absolutePath,0))
     }
 }

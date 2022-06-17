@@ -1,7 +1,5 @@
-package com.hloong.longlog;
+package com.hloong.lib.longlog;
 
-
-import android.util.Log;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -46,6 +44,12 @@ public class LongLog {
         log(LongLogType.A,tag,contents);
     }
 
+    private static final String LOG_PACKAGE;
+    static {
+        String className = LongLog.class.getName();
+        LOG_PACKAGE = className.substring(0,className.lastIndexOf('.')+1);
+    }
+
     public static void log(@LongLogType.TYPE int type,Object... contents){
         log(type,LongLogManager.getInstance().getConfig().getGlobalTag(),contents);
     }
@@ -62,12 +66,18 @@ public class LongLog {
             sb.append(threadInfo).append("\n");
         }
         if (config.stackTraceDepth() > 0){
-            String stackTrace = LongLogConfig.STACK_TRACE_FORMATTER.format(new Throwable().getStackTrace());
+            String stackTrace = LongLogConfig.STACK_TRACE_FORMATTER.format(
+                    LongStackTraceUtil.getCroppedRealStackTrack(new Throwable().getStackTrace(),
+                            LOG_PACKAGE,config.stackTraceDepth()));
             sb.append(stackTrace).append("\n");
         }
         String body = parseBody(contents,config);
+        if (body != null) {//替换转义字符\
+            body = body.replace("\\\"", "\"");
+        }
         sb.append(body);
-        List<LongLogPrinter> printers = config.printers() != null
+        List<LongLogPrinter> printers =
+                config.printers() != null
                 ? Arrays.asList(config.printers())
                 : LongLogManager.getInstance().getPrinters();
         if (printers == null){
@@ -80,6 +90,9 @@ public class LongLog {
 
     private static String parseBody(@NotNull Object[] contents,@NotNull LongLogConfig config){
         if (config.injectJsonParser() != null){
+            if (contents.length == 1 && contents[0] instanceof String){
+                return (String)contents[0];
+            }
             return config.injectJsonParser().toJson(contents);
         }
         StringBuilder sb = new StringBuilder();

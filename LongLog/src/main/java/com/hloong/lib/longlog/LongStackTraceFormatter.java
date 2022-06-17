@@ -1,4 +1,4 @@
-package com.hloong.longlog;
+package com.hloong.lib.longlog;
 
 public class LongStackTraceFormatter implements LongLogFromatter<StackTraceElement[]> {
     @Override
@@ -9,11 +9,11 @@ public class LongStackTraceFormatter implements LongLogFromatter<StackTraceEleme
         }else if (data.length == 1){
             return "\t-"+data[0].toString();
         }else {
-            for (int i = 0; i < data.length; i++) {
+            for (int i = 0,len = data.length; i <len; i++) {
                 if (i == 0){
                     sb.append("StackTrace:\n");
                 }
-                if (i != data.length - 1) {
+                if (i != len - 1) {
                     sb.append("\t├ ");
                     sb.append(data[i].toString());
                     sb.append("\n");

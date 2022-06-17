@@ -2,21 +2,23 @@ package com.hloong.frame
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.hloong.longlog.LongLog
-import com.hloong.longlog.LongLogConfig
-import com.hloong.longlog.LongLogType
+import com.hloong.lib.longlog.*
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
+    var viewPrinter:LongViewPrinter ?= null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        viewPrinter = LongViewPrinter(this)
         tv_log.setOnClickListener {
-            LongLog.a("123hi")
+            printLog()
         }
+        viewPrinter!!.viewPrinterProvider.showFloatingView()
     }
 
     private fun printLog(){
+        LongLogManager.getInstance().addPrinters(viewPrinter);
         LongLog.log(object:LongLogConfig(){
             override fun includeThread(): Boolean {
                 return true
