@@ -1,5 +1,5 @@
 package com.hloong.lib.longlog;
 
-public interface LongLogFromatter<T> {
+public interface LongLogFormatter<T> {
     String format(T data);
 }

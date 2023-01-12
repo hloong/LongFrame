@@ -37,7 +37,7 @@ public class LongViewPrinterProvider {
         floatingView.setTag(TAG_FLOATING_VIEW);
         floatingView.setBackgroundColor(Color.BLACK);
         floatingView.setAlpha(0.8f);
-        params.bottomMargin = DisplayUtil.dp2px(100,recyclerView.getResources());
+        params.bottomMargin = DisplayUtil.INSTANCE.dp2px(150,recyclerView.getResources());
         rootView.addView(genFloatingView(),params);
     }
 
@@ -67,7 +67,8 @@ public class LongViewPrinterProvider {
             return;
         }
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, DisplayUtil.dp2px(160,rootView.getResources()));
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                DisplayUtil.INSTANCE.dp2px(160,rootView.getResources()));
         params.gravity = Gravity.BOTTOM;
         View logView = genLogView();
         logView.setTag(TAG_LOG_VIEW);

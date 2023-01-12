@@ -6,7 +6,7 @@ import android.os.Build
 import android.view.View
 import android.view.WindowManager
 
-object HiStatusBar {
+object LongStatusBar {
 
     /**
      *darkContent true:意味着 白底黑字， false:黑底白字

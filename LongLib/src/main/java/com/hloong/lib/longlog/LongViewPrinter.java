@@ -78,10 +78,9 @@ public class LongViewPrinter implements LongLogPrinter {
             return logs.size();
         }
         /**
-         * 跟进log级别获取不同的高了颜色
-         *
-         * @param logLevel log 级别
-         * @return 高亮的颜色
+         * Get different colors according to log level.
+         * @param logLevel
+         * @return highlight color
          */
         private int getHighlightColor(int logLevel) {
             int highlight;
@@ -116,8 +115,8 @@ public class LongViewPrinter implements LongLogPrinter {
         TextView tvMessage;
         public LogViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvTag = itemView.findViewById(R.id.tv_tag);
-            tvMessage = itemView.findViewById(R.id.tv_message);
+            tvTag = itemView.findViewById(R.id.long_log_tv_tag);
+            tvMessage = itemView.findViewById(R.id.long_log_tv_message);
         }
     }
 }

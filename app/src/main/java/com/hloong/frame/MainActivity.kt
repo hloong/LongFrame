@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
             override fun stackTraceDepth(): Int {
                 return 0
             }
-        },LongLogType.E,"-------","5566")
+        },LongLogType.E,"Print","-1-1-1-")
         LongLog.a("long_log:123")
     }
 

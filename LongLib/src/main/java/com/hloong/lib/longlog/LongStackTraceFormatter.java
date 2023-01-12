@@ -1,6 +1,6 @@
 package com.hloong.lib.longlog;
 
-public class LongStackTraceFormatter implements LongLogFromatter<StackTraceElement[]> {
+public class LongStackTraceFormatter implements LongLogFormatter<StackTraceElement[]> {
     @Override
     public String format(StackTraceElement[] data) {
         StringBuilder sb = new StringBuilder(128);

@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class LongLogManager {
+
     private LongLogConfig config;
     private static LongLogManager instance;
     private List<LongLogPrinter> printers = new ArrayList<>();

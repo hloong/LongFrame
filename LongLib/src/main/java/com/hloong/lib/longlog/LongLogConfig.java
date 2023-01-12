@@ -20,6 +20,10 @@ public abstract class LongLogConfig {
         return false;
     }
 
+    /**
+     * get stack depth
+     * @return default 5
+     */
     public int stackTraceDepth() {
         return 5;
     }
