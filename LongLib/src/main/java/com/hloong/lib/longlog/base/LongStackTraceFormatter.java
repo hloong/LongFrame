@@ -1,4 +1,6 @@
-package com.hloong.lib.longlog;
+package com.hloong.lib.longlog.base;
+
+import com.hloong.lib.longlog.base.LongLogFormatter;
 
 public class LongStackTraceFormatter implements LongLogFormatter<StackTraceElement[]> {
     @Override

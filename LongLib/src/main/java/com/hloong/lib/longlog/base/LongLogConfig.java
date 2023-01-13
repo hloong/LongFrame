@@ -1,9 +1,9 @@
-package com.hloong.lib.longlog;
+package com.hloong.lib.longlog.base;
 
 public abstract class LongLogConfig {
-    static int MAX_LEN = 512;
-    static LongThreadFormatter THREAD_FORMATTER = new LongThreadFormatter();
-    static LongStackTraceFormatter STACK_TRACE_FORMATTER = new LongStackTraceFormatter();
+    public static int MAX_LEN = 512;
+    public static LongThreadFormatter THREAD_FORMATTER = new LongThreadFormatter();
+    public static LongStackTraceFormatter STACK_TRACE_FORMATTER = new LongStackTraceFormatter();
 
     public String getGlobalTag(){
         return "LongLog";
@@ -35,7 +35,4 @@ public abstract class LongLogConfig {
     public interface JsonParser{
         String toJson(Object object);
     }
-
-
-
 }

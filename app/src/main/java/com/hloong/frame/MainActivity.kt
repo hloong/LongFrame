@@ -3,6 +3,8 @@ package com.hloong.frame
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.hloong.lib.longlog.*
+import com.hloong.lib.longlog.base.LongLogConfig
+import com.hloong.lib.longlog.base.LongLogType
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -19,7 +21,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun printLog(){
         LongLogManager.getInstance().addPrinters(viewPrinter);
-        LongLog.log(object:LongLogConfig(){
+        LongLog.log(object: LongLogConfig(){
             override fun includeThread(): Boolean {
                 return true
             }
@@ -27,7 +29,7 @@ class MainActivity : AppCompatActivity() {
             override fun stackTraceDepth(): Int {
                 return 0
             }
-        },LongLogType.E,"Print","-1-1-1-")
+        }, LongLogType.E,"Print","-1-1-1-")
         LongLog.a("long_log:123")
     }
 

@@ -1,3 +1,4 @@
+include ':LongUi'
 include ':LongLib'
 include ':app'
 rootProject.name = "LongFrame"

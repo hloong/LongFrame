@@ -2,12 +2,14 @@ package com.hloong.lib.longlog;
 
 import android.util.Log;
 
+import com.hloong.lib.longlog.base.LongLogConfig;
+import com.hloong.lib.longlog.base.LongLogPrinter;
+
 import org.jetbrains.annotations.NotNull;
 
-import static com.hloong.lib.longlog.LongLogConfig.MAX_LEN;
+import static com.hloong.lib.longlog.base.LongLogConfig.MAX_LEN;
 
 public class LongConsolePrinter implements LongLogPrinter {
-
     @Override
     public void print(@NotNull LongLogConfig config, int level, String tag, @NotNull String msg) {
         int len = msg.length();

@@ -4,7 +4,7 @@ import android.app.Application
 import com.google.gson.Gson
 import com.hloong.lib.longlog.LongConsolePrinter
 import com.hloong.lib.longlog.LongFilePrinter
-import com.hloong.lib.longlog.LongLogConfig
+import com.hloong.lib.longlog.base.LongLogConfig
 import com.hloong.lib.longlog.LongLogManager
 
 class LongApp:Application(){
@@ -17,7 +17,6 @@ class LongApp:Application(){
             override fun getGlobalTag(): String {
                 return "LongApp"
             }
-
             override fun includeThread(): Boolean {
                 return true
             }

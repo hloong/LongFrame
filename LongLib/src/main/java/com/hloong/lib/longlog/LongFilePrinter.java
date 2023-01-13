@@ -1,5 +1,8 @@
 package com.hloong.lib.longlog;
 
+import com.hloong.lib.longlog.base.LongLogConfig;
+import com.hloong.lib.longlog.base.LongLogPrinter;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedWriter;

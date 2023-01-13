@@ -1,4 +1,4 @@
-package com.hloong.lib.longlog;
+package com.hloong.lib.longlog.base;
 
 import android.util.Log;
 

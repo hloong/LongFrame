@@ -12,6 +12,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hloong.lib.R;
+import com.hloong.lib.longlog.base.LongLogConfig;
+import com.hloong.lib.longlog.base.LongLogPrinter;
+import com.hloong.lib.longlog.base.LongLogType;
 
 import org.jetbrains.annotations.NotNull;
 

@@ -1,5 +1,8 @@
 package com.hloong.lib.longlog;
 
+import com.hloong.lib.longlog.base.LongLogConfig;
+import com.hloong.lib.longlog.base.LongLogPrinter;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -7,12 +10,9 @@ import java.util.Arrays;
 import java.util.List;
 
 public class LongLogManager {
-
     private LongLogConfig config;
     private static LongLogManager instance;
     private List<LongLogPrinter> printers = new ArrayList<>();
-
-
     private LongLogManager(LongLogConfig config,LongLogPrinter[] printers){
         this.config = config;
         this.printers.addAll(Arrays.asList(printers));
