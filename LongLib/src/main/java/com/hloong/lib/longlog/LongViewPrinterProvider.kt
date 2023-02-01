@@ -1,106 +1,99 @@
-package com.hloong.lib.longlog;
+package com.hloong.lib.longlog
 
-import android.graphics.Color;
-import android.view.Gravity;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.TextView;
+import android.graphics.Color
+import android.view.Gravity
+import android.view.View
+import android.view.ViewGroup
+import android.widget.FrameLayout
+import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import com.hloong.lib.util.DisplayUtil.dp2px
 
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.hloong.lib.util.DisplayUtil;
-
-public class LongViewPrinterProvider {
-    private FrameLayout rootView;
-    private View floatingView;
-    private boolean isOpen;
-    private FrameLayout logView;
-    private RecyclerView recyclerView;
-
-    public LongViewPrinterProvider(FrameLayout rootView, RecyclerView recyclerView) {
-        this.rootView = rootView;
-        this.recyclerView = recyclerView;
-    }
-
-    private static final String TAG_FLOATING_VIEW= "TAG_FLOATING_VIEW";
-    private static final String TAG_LOG_VIEW = "TAG_LOG_VIEW";
-
-    public void showFloatingView(){
-        if (rootView.findViewWithTag(TAG_FLOATING_VIEW) != null){
-            return;
+class LongViewPrinterProvider(
+    private val rootView: FrameLayout,
+    private val recyclerView: RecyclerView
+) {
+    private var floatingView: View? = null
+    private var isOpen = false
+    private var logView: FrameLayout? = null
+    fun showFloatingView() {
+        if (rootView.findViewWithTag<View?>(TAG_FLOATING_VIEW) != null) {
+            return
         }
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        params.gravity = Gravity.BOTTOM|Gravity.END;
-        View floatingView = genFloatingView();
-        floatingView.setTag(TAG_FLOATING_VIEW);
-        floatingView.setBackgroundColor(Color.BLACK);
-        floatingView.setAlpha(0.8f);
-        params.bottomMargin = DisplayUtil.INSTANCE.dp2px(200,recyclerView.getResources());
-        rootView.addView(genFloatingView(),params);
+        val params = FrameLayout.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        params.gravity = Gravity.BOTTOM or Gravity.END
+        val floatingView = genFloatingView()
+        floatingView.tag = TAG_FLOATING_VIEW
+        floatingView.setBackgroundColor(Color.BLACK)
+        floatingView.alpha = 0.8f
+        params.bottomMargin = dp2px(200f, recyclerView.resources)
+        rootView.addView(genFloatingView(), params)
     }
 
-    public void closeFloatingView(){
-        rootView.removeView(genFloatingView());
+    fun closeFloatingView() {
+        rootView.removeView(genFloatingView())
     }
 
-    private View genFloatingView(){
-        if (floatingView != null){
-            return floatingView;
+    private fun genFloatingView(): View {
+        if (floatingView != null) {
+            return floatingView!!
         }
-        TextView textView = new TextView(rootView.getContext());
-        textView.setPadding(10,10,10,10);
-        textView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!isOpen){
-                    showLogView();
-                }
+        val textView = TextView(rootView.context)
+        textView.setPadding(10, 10, 10, 10)
+        textView.setOnClickListener(View.OnClickListener {
+            if (!isOpen) {
+                showLogView()
             }
-        });
-        textView.setText("LongLog");
-        return floatingView = textView;
-    }
-    private void showLogView() {
-        if (rootView.findViewWithTag(TAG_LOG_VIEW)!=null){
-            return;
-        }
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                DisplayUtil.INSTANCE.dp2px(240,rootView.getResources()));
-        params.gravity = Gravity.BOTTOM;
-        View logView = genLogView();
-        logView.setTag(TAG_LOG_VIEW);
-        rootView.addView(genLogView(),params);
-        isOpen = true;
+        })
+        textView.text = "LongLog"
+        return textView.also { floatingView = it }
     }
 
-    private View genLogView(){
-        if (logView != null){
-            return logView;
+    private fun showLogView() {
+        if (rootView.findViewWithTag<View?>(TAG_LOG_VIEW) != null) {
+            return
         }
-        FrameLayout logView = new FrameLayout(rootView.getContext());
-        logView.setBackgroundColor(Color.BLACK);
-        logView.addView(recyclerView);
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        params.gravity = Gravity.END;
-        TextView tvClose = new TextView(rootView.getContext());
-        tvClose.setPadding(10,10,10,10);
-        tvClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                closeLogView();
-            }
-        });
-        tvClose.setText("Close");
-        logView.addView(tvClose,params);
-        return this.logView = logView;
+        val params = FrameLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            dp2px(240f, rootView.resources)
+        )
+        params.gravity = Gravity.BOTTOM
+        val logView = genLogView()
+        logView.tag = TAG_LOG_VIEW
+        rootView.addView(genLogView(), params)
+        isOpen = true
     }
 
-    public void closeLogView(){
-        isOpen = false;
-        rootView.removeView(genLogView());
+    private fun genLogView(): View {
+        if (logView != null) {
+            return logView!!
+        }
+        val logView = FrameLayout(rootView.context)
+        logView.setBackgroundColor(Color.BLACK)
+        logView.addView(recyclerView)
+        val params = FrameLayout.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        params.gravity = Gravity.END
+        val tvClose = TextView(rootView.context)
+        tvClose.setPadding(10, 10, 10, 10)
+        tvClose.setOnClickListener { closeLogView() }
+        tvClose.text = "Close"
+        logView.addView(tvClose, params)
+        return logView.also { this.logView = it }
+    }
+
+    fun closeLogView() {
+        isOpen = false
+        rootView.removeView(genLogView())
+    }
+
+    companion object {
+        private val TAG_FLOATING_VIEW = "TAG_FLOATING_VIEW"
+        private val TAG_LOG_VIEW = "TAG_LOG_VIEW"
     }
 }

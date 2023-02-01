@@ -1,7 +1,5 @@
-package com.hloong.lib.longlog.base;
+package com.hloong.lib.longlog.base
 
-import org.jetbrains.annotations.NotNull;
-
-public interface LongLogPrinter {
-    void print(@NotNull LongLogConfig config,int level,String tag,@NotNull String msg);
+interface LongLogPrinter {
+    fun print(config: LongLogConfig, level: Int, tag: String?, msg: String)
 }

@@ -1,30 +1,30 @@
-package com.hloong.lib.longlog.base;
+package com.hloong.lib.longlog.base
 
-import com.hloong.lib.longlog.base.LongLogFormatter;
-
-public class LongStackTraceFormatter implements LongLogFormatter<StackTraceElement[]> {
-    @Override
-    public String format(StackTraceElement[] data) {
-        StringBuilder sb = new StringBuilder(128);
-        if (data != null || data.length == 0){
-            return null;
-        }else if (data.length == 1){
-            return "\t-"+data[0].toString();
-        }else {
-            for (int i = 0,len = data.length; i <len; i++) {
-                if (i == 0){
-                    sb.append("StackTrace:\n");
+class LongStackTraceFormatter : LongLogFormatter<Array<StackTraceElement?>?> {
+    override fun format(data: Array<StackTraceElement?>?): String? {
+        val sb = StringBuilder(128)
+        return if (data != null || data!!.isEmpty()) {
+            null
+        } else if (data!!.size == 1) {
+            "\t-" + data[0].toString()
+        } else {
+            var i = 0
+            val len = data.size
+            while (i < len) {
+                if (i == 0) {
+                    sb.append("StackTrace:\n")
                 }
                 if (i != len - 1) {
-                    sb.append("\t├ ");
-                    sb.append(data[i].toString());
-                    sb.append("\n");
+                    sb.append("\t├ ")
+                    sb.append(data[i].toString())
+                    sb.append("\n")
                 } else {
-                    sb.append("\t└ ");
-                    sb.append(data[i].toString());
+                    sb.append("\t└ ")
+                    sb.append(data[i].toString())
                 }
+                i++
             }
-            return sb.toString();
+            sb.toString()
         }
     }
 }

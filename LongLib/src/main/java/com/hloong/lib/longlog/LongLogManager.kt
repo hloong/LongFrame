@@ -1,44 +1,37 @@
-package com.hloong.lib.longlog;
+package com.hloong.lib.longlog
 
-import com.hloong.lib.longlog.base.LongLogConfig;
-import com.hloong.lib.longlog.base.LongLogPrinter;
+import com.hloong.lib.longlog.base.LongLogConfig
+import com.hloong.lib.longlog.base.LongLogPrinter
+import java.util.*
 
-import org.jetbrains.annotations.NotNull;
+class LongLogManager private constructor(var config: LongLogConfig, printers: Array<out LongLogPrinter>) {
+    private var printers: MutableList<LongLogPrinter> = ArrayList()
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-public class LongLogManager {
-    private LongLogConfig config;
-    private static LongLogManager instance;
-    private List<LongLogPrinter> printers = new ArrayList<>();
-    private LongLogManager(LongLogConfig config,LongLogPrinter[] printers){
-        this.config = config;
-        this.printers.addAll(Arrays.asList(printers));
-
-    }
-    public static LongLogManager getInstance(){
-        return instance;
-    }
-    public static void init(@NotNull LongLogConfig config,LongLogPrinter... printers){
-        instance = new LongLogManager(config,printers);
+    init {
+        this.printers.addAll(listOf(*printers))
     }
 
-    public LongLogConfig getConfig(){
-        return config;
+    fun getPrinters(): List<LongLogPrinter> {
+        return printers
     }
 
-    public List<LongLogPrinter> getPrinters() {
-        return printers;
+    fun addPrinters(printer: LongLogPrinter) {
+        printers.add(printer)
     }
 
-    public void addPrinters(LongLogPrinter printer) {
-        printers.add(printer);
+    fun removePrinters(printer: LongLogPrinter?) {
+        if (printer != null) {
+            printers.remove(printer)
+        }
     }
-    public void removePrinters(LongLogPrinter printer) {
-        if (printer != null){
-            printers.remove(printer);
+
+    companion object {
+        @JvmStatic
+        var instance: LongLogManager? = null
+            private set
+
+        fun init(config: LongLogConfig, vararg printers: LongLogPrinter) {
+            instance = LongLogManager(config, printers)
         }
     }
 }

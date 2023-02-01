@@ -1,213 +1,211 @@
-package com.hloong.lib.longlog;
+package com.hloong.lib.longlog
 
-import com.hloong.lib.longlog.base.LongLogConfig;
-import com.hloong.lib.longlog.base.LongLogPrinter;
+import com.hloong.lib.longlog.base.LongLogConfig
+import com.hloong.lib.longlog.base.LongLogPrinter
+import java.io.BufferedWriter
+import java.io.File
+import java.io.FileWriter
+import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.*
+import java.util.concurrent.BlockingQueue
+import java.util.concurrent.Executors
+import java.util.concurrent.LinkedBlockingDeque
 
-import org.jetbrains.annotations.NotNull;
+class LongFilePrinter(private var logPath: String, private var retentionTime: Long) :
+    LongLogPrinter {
+    private var writer: LogWriter
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingDeque;
+    @Volatile
+    private var worker: PrintWorker
 
-public class LongFilePrinter implements LongLogPrinter {
-    private static final ExecutorService EXECUTOR = Executors.newSingleThreadExecutor();
-    private final String logPath;
-    private final long retentionTime;
-    private LogWriter writer;
-    private volatile  PrintWorker worker;
-    private static LongFilePrinter instance;
-
-    public static synchronized LongFilePrinter getInstance(String logPath,long retentionTime){
-        if (instance == null){
-            instance = new LongFilePrinter(logPath,retentionTime);
-        }
-        return instance;
-    }
-
-    public LongFilePrinter(String logPath, long retentionTime) {
-        this.logPath = logPath;
-        this.retentionTime = retentionTime;
-        this.writer = new LogWriter();
-        this.worker = new PrintWorker();
-        cleanExpireLog();
+    init {
+        writer = LogWriter()
+        worker = PrintWorker()
+        cleanExpireLog()
     }
 
     /**
      * 清除过期log
      */
-    private void cleanExpireLog() {
-        if (retentionTime <= 0){
-            return;
+    private fun cleanExpireLog() {
+        if (retentionTime <= 0) {
+            return
         }
-        long currentTime = System.currentTimeMillis();
-        File logDir = new File(logPath);
-        File[] files = logDir.listFiles();
-        if (files == null){
-            return;
-        }
-        for (File file:files) {
-            if (currentTime-file.lastModified() > retentionTime){
-                file.delete();
+        var currentTime = System.currentTimeMillis()
+        var logDir = File(logPath)
+        var files = logDir.listFiles() ?: return
+        for (file in files) {
+            if (currentTime - file.lastModified() > retentionTime) {
+                file.delete()
             }
         }
     }
 
-    @Override
-    public void print(@NotNull LongLogConfig config, int level, String tag, @NotNull String msg) {
-        long timeMillis = System.currentTimeMillis();
-        if (!worker.isRunning()){
-            worker.start();
+    override fun print(config: LongLogConfig, level: Int, tag: String?, msg: String) {
+        var timeMillis = System.currentTimeMillis()
+        if (!worker.isRunning()) {
+            worker.start()
         }
-        worker.put(new LongLogMo(timeMillis,level,tag,msg));
+        worker.put(LongLogMo(timeMillis, level, tag!!, msg))
     }
 
-    private class PrintWorker implements Runnable{
-        private BlockingQueue<LongLogMo> logs = new LinkedBlockingDeque<>();
-        private volatile boolean running;
+    private inner class PrintWorker : Runnable {
+        private var logs: BlockingQueue<LongLogMo> = LinkedBlockingDeque()
+
+        @Volatile
+        private var running = false
+
         /**
          * 将log放入打印队列
          * @param log 要被打印的log
          */
-        void put(LongLogMo log){
+        fun put(log: LongLogMo) {
             try {
-                logs.put(log);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+                logs.put(log)
+            } catch (e: InterruptedException) {
+                e.printStackTrace()
             }
         }
+
         /**
          * 判断工作线程是否还在运行中
          * @return true 在运行
          */
-        boolean isRunning() {
-            synchronized (this){
-                return running;
+        fun isRunning(): Boolean {
+            synchronized(this) { return running }
+        }
+
+        fun start() {
+            synchronized(this) {
+                EXECUTOR.execute(this)
+                running = true
             }
         }
 
-        void start(){
-            synchronized (this){
-                EXECUTOR.execute(this);
-                running = true;
-            }
-        }
-
-        @Override
-        public void run() {
-            LongLogMo log;
-            while (true){
+        override fun run() {
+            var log: LongLogMo
+            while (true) {
                 try {
-                    log = logs.take();
-                    doPrint(log);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    log = logs.take()
+                    doPrint(log)
+                } catch (e: InterruptedException) {
+                    e.printStackTrace()
                 }
             }
         }
     }
-    private void doPrint(LongLogMo logMo){
-        String lastFileName = writer.getPreFileName();
+
+    private fun doPrint(logMo: LongLogMo) {
+        var lastFileName: String = writer.preFileName.toString()
         if (lastFileName == null) {
-            String newFileName = genFileName();
-            if (writer.isReady()) {
-                writer.close();
+            var newFileName = genFileName()
+            if (writer.isReady) {
+                writer.close()
             }
             if (!writer.ready(newFileName)) {
-                return;
+                return
             }
         }
-        writer.append(logMo.flattenedLog());
+        writer.append(logMo.flattenedLog())
     }
-    private String genFileName(){
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
-        sdf.setTimeZone(TimeZone.getDefault());
-        return sdf.format(new Date(System.currentTimeMillis()));
+
+    private fun genFileName(): String {
+        var sdf = SimpleDateFormat("yyyy-MM-dd", Locale.CHINA)
+        sdf.timeZone = TimeZone.getDefault()
+        return sdf.format(Date(System.currentTimeMillis()))
     }
+
     /**
      * 基于BufferedWriter将log写入文件
      */
-    private class LogWriter {
-        private String preFileName;
-        private File logFile;
-        private BufferedWriter bufferedWriter;
-        boolean isReady() {
-            return bufferedWriter != null;
-        }
-        String getPreFileName() {
-            return preFileName;
-        }
+    private inner class LogWriter {
+        var preFileName: String? = null
+            private set
+        private var logFile: File? = null
+        private var bufferedWriter: BufferedWriter? = null
+        val isReady: Boolean
+            get() = bufferedWriter != null
+
         /**
          * log写入前的准备操作
          * @param newFileName 要保存log的文件名
          * @return true 表示准备就绪
          */
-        boolean ready(String newFileName) {
-            preFileName = newFileName;
-            logFile = new File(logPath, newFileName);
+        fun ready(newFileName: String?): Boolean {
+            preFileName = newFileName
+            logFile = File(logPath, newFileName)
             // 当log文件不存在时创建log文件
-            if (!logFile.exists()) {
+            if (!logFile!!.exists()) {
                 try {
-                    File parent = logFile.getParentFile();
+                    val parent = logFile!!.parentFile
                     if (!parent.exists()) {
-                        parent.mkdirs();
+                        parent.mkdirs()
                     }
-                    logFile.createNewFile();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    preFileName = null;
-                    logFile = null;
-                    return false;
+                    logFile!!.createNewFile()
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                    preFileName = null
+                    logFile = null
+                    return false
                 }
             }
             try {
-                bufferedWriter = new BufferedWriter(new FileWriter(logFile, true));
-            } catch (Exception e) {
-                e.printStackTrace();
-                preFileName = null;
-                logFile = null;
-                return false;
+                bufferedWriter = BufferedWriter(FileWriter(logFile, true))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                preFileName = null
+                logFile = null
+                return false
             }
-            return true;
+            return true
         }
+
         /**
          * 关闭bufferedWriter
          */
-        boolean close() {
+        fun close(): Boolean {
             if (bufferedWriter != null) {
                 try {
-                    bufferedWriter.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return false;
+                    bufferedWriter!!.close()
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                    return false
                 } finally {
-                    bufferedWriter = null;
-                    preFileName = null;
-                    logFile = null;
+                    bufferedWriter = null
+                    preFileName = null
+                    logFile = null
                 }
             }
-            return true;
+            return true
         }
+
         /**
          * 将log写入文件
          * @param flattenedLog 格式化后的log
          */
-        void append(String flattenedLog) {
+        fun append(flattenedLog: String?) {
             try {
-                bufferedWriter.write(flattenedLog);
-                bufferedWriter.newLine();
-                bufferedWriter.flush();
-            } catch (IOException e) {
-                e.printStackTrace();
+                if (bufferedWriter != null){
+                    bufferedWriter!!.write(flattenedLog)
+                    bufferedWriter!!.newLine()
+                    bufferedWriter!!.flush()
+                }
+            } catch (e: IOException) {
+                e.printStackTrace()
             }
+        }
+    }
+
+    companion object {
+        private val EXECUTOR = Executors.newSingleThreadExecutor()
+        private var instance: LongFilePrinter? = null
+        @Synchronized
+        fun getInstance(logPath: String, retentionTime: Long): LongFilePrinter? {
+            if (instance == null) {
+                instance = LongFilePrinter(logPath, retentionTime)
+            }
+            return instance
         }
     }
 }

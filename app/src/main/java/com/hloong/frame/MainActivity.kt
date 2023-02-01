@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun printLog(){
-        LongLogManager.getInstance().addPrinters(viewPrinter);
+        LongLogManager.instance!!.addPrinters(viewPrinter!!)
         LongLog.log(object: LongLogConfig(){
             override fun includeThread(): Boolean {
                 return true
@@ -31,6 +31,7 @@ class MainActivity : AppCompatActivity() {
             }
         }, LongLogType.E,"Print","-1-1-1-")
         LongLog.a("long_log:123")
+
     }
 
 }

@@ -16,27 +16,20 @@ import com.hloong.ui.R
 import com.hloong.ui.tap.common.ILongTap
 
 
-class LongTapBottom(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) :
-        RelativeLayout(context, attrs, defStyleAttr), ILongTap<LongTapBottomInfo<*>?> {
-        constructor(context: Context?) : this(context, null) {}
-        constructor(context: Context?, attrs: AttributeSet?) : this(context, attrs, 0) {}
-
-        private var tabInfo: LongTapBottomInfo<*>? = null
+class LongTabBottom @JvmOverloads constructor(context: Context?, attrs: AttributeSet?=null, defStyleAttr: Int = 0) :
+        RelativeLayout(context, attrs, defStyleAttr), ILongTap<LongTabBottomInfo<*>?> {
+        private var tabInfo: LongTabBottomInfo<*>? = null
         private var tabImageView: ImageView? = null
         private var tabIconView: TextView? = null
         private var tabNameView: TextView? = null
         init {
-            init()
-        }
-
-        private fun init() {
             LayoutInflater.from(context).inflate(R.layout.long_tab_bottom, this)
             tabImageView = findViewById(R.id.long_iv_image)
             tabIconView = findViewById(R.id.long_tv_icon)
             tabNameView = findViewById(R.id.long_tv_name)
         }
 
-    override fun setLongTapInfo(data: LongTapBottomInfo<*>?) {
+    override fun setLongTapInfo(data: LongTabBottomInfo<*>?) {
         this.tabInfo = data
         inflateInfo(false,true)
     }
@@ -51,7 +44,7 @@ class LongTapBottom(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) 
     fun getTabNameView():TextView?{
         return tabNameView
     }
-    fun getLongTabInfo():LongTapBottomInfo<*>?{
+    fun getLongTabInfo():LongTabBottomInfo<*>?{
         return tabInfo
     }
 
@@ -69,8 +62,8 @@ class LongTapBottom(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) 
 
     override fun onTabSelectedChange(
         index: Int,
-        prevInfo: LongTapBottomInfo<*>?,
-        nextInfo: LongTapBottomInfo<*>?
+        prevInfo: LongTabBottomInfo<*>?,
+        nextInfo: LongTabBottomInfo<*>?
     ) {
         if (prevInfo != tabInfo && nextInfo != tabInfo || prevInfo == nextInfo) {
             return
@@ -83,7 +76,7 @@ class LongTapBottom(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) 
     }
 
     private fun inflateInfo(selected: Boolean, init: Boolean) {
-            if (tabInfo!!.tabType === LongTapBottomInfo.TabType.ICON) {
+            if (tabInfo!!.tabType === LongTabBottomInfo.TabType.ICON) {
                 if (init) {
                     tabImageView!!.visibility = GONE
                     tabIconView!!.visibility = VISIBLE
@@ -102,7 +95,7 @@ class LongTapBottom(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) 
                     tabIconView!!.setTextColor(getTextColor(tabInfo!!.defaultColor))
                     tabNameView!!.setTextColor(getTextColor(tabInfo!!.defaultColor))
                 }
-            } else if (tabInfo!!.tabType === LongTapBottomInfo.TabType.BITMAP) {
+            } else if (tabInfo!!.tabType === LongTabBottomInfo.TabType.BITMAP) {
                 if (init) {
                     tabImageView!!.visibility = VISIBLE
                     tabIconView!!.visibility = GONE

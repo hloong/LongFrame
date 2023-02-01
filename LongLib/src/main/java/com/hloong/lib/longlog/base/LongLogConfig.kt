@@ -1,38 +1,43 @@
-package com.hloong.lib.longlog.base;
+package com.hloong.lib.longlog.base
 
-public abstract class LongLogConfig {
-    public static int MAX_LEN = 512;
-    public static LongThreadFormatter THREAD_FORMATTER = new LongThreadFormatter();
-    public static LongStackTraceFormatter STACK_TRACE_FORMATTER = new LongStackTraceFormatter();
-
-    public String getGlobalTag(){
-        return "LongLog";
+abstract class LongLogConfig {
+    open fun enable(): Boolean {
+        return true
     }
-    public boolean enable(){
-        return true;
+    open fun getGlobalTag(): String? {
+        return "LongLog"
     }
 
-    public JsonParser injectJsonParser(){
-        return null;
+    open fun injectJsonParser(): JsonParser? {
+        return null
     }
 
-    public boolean includeThread(){
-        return false;
+    open fun includeThread(): Boolean {
+        return false
     }
 
     /**
      * get stack depth
      * @return default 5
      */
-    public int stackTraceDepth() {
-        return 5;
+    open fun stackTraceDepth(): Int {
+        return 5
     }
 
-    public LongLogPrinter[] printers(){
-        return null;
+    fun printers(): Array<LongLogPrinter>? {
+        return null
     }
 
-    public interface JsonParser{
-        String toJson(Object object);
+    interface JsonParser {
+        fun toJson(obj: Any?): String?
+    }
+
+    companion object {
+        @JvmField
+        var MAX_LEN = 512
+        @JvmField
+        var THREAD_FORMATTER = LongThreadFormatter()
+        @JvmField
+        var STACK_TRACE_FORMATTER = LongStackTraceFormatter()
     }
 }

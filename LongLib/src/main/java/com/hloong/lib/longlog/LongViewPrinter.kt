@@ -1,125 +1,90 @@
-package com.hloong.lib.longlog;
+package com.hloong.lib.longlog
 
-import android.app.Activity;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.TextView;
+import android.app.Activity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.FrameLayout
+import android.widget.TextView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.hloong.lib.R
+import com.hloong.lib.longlog.base.LongLogConfig
+import com.hloong.lib.longlog.base.LongLogPrinter
+import com.hloong.lib.longlog.base.LongLogType
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+class LongViewPrinter(activity: Activity) : LongLogPrinter {
+    private var recyclerView: RecyclerView
+    private var adapter: LogAdapter
+    var viewPrinterProvider: LongViewPrinterProvider
 
-import com.hloong.lib.R;
-import com.hloong.lib.longlog.base.LongLogConfig;
-import com.hloong.lib.longlog.base.LongLogPrinter;
-import com.hloong.lib.longlog.base.LongLogType;
-
-import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-import java.util.List;
-
-public class LongViewPrinter implements LongLogPrinter {
-    private RecyclerView recyclerView;
-    private LogAdapter adapter;
-    private LongViewPrinterProvider viewPrinterProvider;
-    public LongViewPrinter(Activity activity){
-        FrameLayout rootView = activity.findViewById(android.R.id.content);
-        recyclerView = new RecyclerView(activity);
-        adapter = new LogAdapter(LayoutInflater.from(recyclerView.getContext()));
-        LinearLayoutManager layoutManager = new LinearLayoutManager(recyclerView.getContext());
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(adapter);
-
-        viewPrinterProvider = new LongViewPrinterProvider(rootView,recyclerView);
-
+    init {
+        val rootView = activity.findViewById<FrameLayout>(android.R.id.content)
+        recyclerView = RecyclerView(activity)
+        adapter = LogAdapter(LayoutInflater.from(recyclerView.context))
+        val layoutManager = LinearLayoutManager(recyclerView.context)
+        recyclerView.layoutManager = layoutManager
+        recyclerView.adapter = adapter
+        viewPrinterProvider = LongViewPrinterProvider(rootView, recyclerView)
     }
 
-    public LongViewPrinterProvider getViewPrinterProvider() {
-        return viewPrinterProvider;
+    override fun print(config: LongLogConfig, level: Int, tag: String?, msg: String) {
+        adapter.addItem(LongLogMo(System.currentTimeMillis(), level, tag!!, msg))
+        recyclerView.smoothScrollToPosition(adapter.itemCount - 1)
     }
 
-    @Override
-    public void print(@NotNull LongLogConfig config, int level, String tag, @NotNull String msg) {
-        adapter.addItem(new LongLogMo(System.currentTimeMillis(),level,tag,msg));
-        recyclerView.smoothScrollToPosition(adapter.getItemCount()-1);
-    }
-
-    private static class LogAdapter extends RecyclerView.Adapter<LogViewHolder>{
-        private LayoutInflater inflater;
-        private List<LongLogMo> logs = new ArrayList<>();
-
-        public LogAdapter(LayoutInflater inflater) {
-            this.inflater = inflater;
+    private class LogAdapter(private val inflater: LayoutInflater) :
+        RecyclerView.Adapter<LogViewHolder>() {
+        private val logs: MutableList<LongLogMo> = ArrayList()
+        fun addItem(item: LongLogMo) {
+            logs.add(item)
+            notifyItemChanged(logs.size - 1)
         }
 
-        void addItem(LongLogMo item){
-            logs.add(item);
-            notifyItemChanged(logs.size()-1);
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LogViewHolder {
+            val itemView = inflater.inflate(R.layout.log_item, parent, false)
+            return LogViewHolder(itemView)
         }
 
-        @NonNull
-        @Override
-        public LogViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View itemView = inflater.inflate(R.layout.log_item,parent,false);
-            return new LogViewHolder(itemView);
+        override fun onBindViewHolder(holder: LogViewHolder, position: Int) {
+            val item = logs[position]
+            val color = getHighlightColor(item.level)
+            holder.tvMessage.setTextColor(color)
+            holder.tvTag.setTextColor(color)
+            holder.tvTag.text = item.flattened
+            holder.tvMessage.text = item.log
         }
 
-        @Override
-        public void onBindViewHolder(@NonNull LogViewHolder holder, int position) {
-            LongLogMo item = logs.get(position);
-            int color = getHighlightColor(item.level);
-            holder.tvMessage.setTextColor(color);
-            holder.tvTag.setTextColor(color);
-            holder.tvTag.setText(item.getFlattened());
-            holder.tvMessage.setText(item.log);
+        override fun getItemCount(): Int {
+            return logs.size
         }
-        @Override
-        public int getItemCount() {
-            return logs.size();
-        }
+
         /**
          * Get different colors according to log level.
          * @param logLevel
          * @return highlight color
          */
-        private int getHighlightColor(int logLevel) {
-            int highlight;
-            switch (logLevel) {
-                case LongLogType.V:
-                    highlight = 0xffbbbbbb;
-                    break;
-                case LongLogType.D:
-                    highlight = 0xffffffff;
-                    break;
-                case LongLogType.I:
-                    highlight = 0xff6a8759;
-                    break;
-                case LongLogType.W:
-                    highlight = 0xffbbb529;
-                    break;
-                case LongLogType.E:
-                    highlight = 0xffff6b68;
-                    break;
-                default:
-                    highlight = 0xffffff00;
-                    break;
+        private fun getHighlightColor(logLevel: Int): Int {
+            val highlight: Int
+            highlight = when (logLevel) {
+                LongLogType.V -> -0x444445
+                LongLogType.D -> -0x1
+                LongLogType.I -> -0x9578a7
+                LongLogType.W -> -0x444ad7
+                LongLogType.E -> -0x9498
+                else -> -0x100
             }
-            return highlight;
+            return highlight
         }
     }
 
+    private class LogViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        var tvTag: TextView
+        var tvMessage: TextView
 
-
-    private static class LogViewHolder extends RecyclerView.ViewHolder{
-        TextView tvTag;
-        TextView tvMessage;
-        public LogViewHolder(@NonNull View itemView) {
-            super(itemView);
-            tvTag = itemView.findViewById(R.id.long_log_tv_tag);
-            tvMessage = itemView.findViewById(R.id.long_log_tv_message);
+        init {
+            tvTag = itemView.findViewById(R.id.long_log_tv_tag)
+            tvMessage = itemView.findViewById(R.id.long_log_tv_message)
         }
     }
 }

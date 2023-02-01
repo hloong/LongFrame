@@ -4,7 +4,7 @@ import android.graphics.Bitmap
 import androidx.fragment.app.Fragment
 
 
-class LongTapBottomInfo<Color> {
+class LongTabBottomInfo<Color> {
     enum class TabType {
         BITMAP, ICON
     }
@@ -24,14 +24,14 @@ class LongTapBottomInfo<Color> {
     var tintColor: Color? = null
     var tabType: TabType? = null
 
-    fun LongTapBottomInfo(name: String?, defaultBitmap: Bitmap?, selectedBitmap: Bitmap?) {
+    constructor(name: String?, defaultBitmap: Bitmap?, selectedBitmap: Bitmap?) {
         this.name = name
         this.defaultBitmap = defaultBitmap
         this.selectedBitmap = selectedBitmap
         tabType = TabType.BITMAP
     }
 
-    fun LongTapBottomInfo(
+    constructor(
         name: String?,
         iconFont: String?,
         defaultIconName: String?,

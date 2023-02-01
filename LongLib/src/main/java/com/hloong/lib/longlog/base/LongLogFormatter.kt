@@ -1,5 +1,5 @@
-package com.hloong.lib.longlog.base;
+package com.hloong.lib.longlog.base
 
-public interface LongLogFormatter<T> {
-    String format(T data);
+interface LongLogFormatter<T> {
+    fun format(data: T): String?
 }

@@ -1,32 +1,26 @@
-package com.hloong.lib.longlog;
+package com.hloong.lib.longlog
 
-import android.util.Log;
+import android.util.Log
+import com.hloong.lib.longlog.base.LongLogConfig
+import com.hloong.lib.longlog.base.LongLogPrinter
 
-import com.hloong.lib.longlog.base.LongLogConfig;
-import com.hloong.lib.longlog.base.LongLogPrinter;
-
-import org.jetbrains.annotations.NotNull;
-
-import static com.hloong.lib.longlog.base.LongLogConfig.MAX_LEN;
-
-public class LongConsolePrinter implements LongLogPrinter {
-    @Override
-    public void print(@NotNull LongLogConfig config, int level, String tag, @NotNull String msg) {
-        int len = msg.length();
-        int countOfSub = len/MAX_LEN;
-        if (countOfSub > 0){
-            StringBuilder log = new StringBuilder();
-            int index = 0;
-            for (int i = 0; i < countOfSub ; i++) {
-                log.append(msg.substring(index,index+MAX_LEN));
-                index+=MAX_LEN;
+class LongConsolePrinter : LongLogPrinter {
+    override fun print(config: LongLogConfig, level: Int, tag: String?, msg: String) {
+        val len = msg.length
+        val countOfSub = len / LongLogConfig.MAX_LEN
+        if (countOfSub > 0) {
+            val log = StringBuilder()
+            var index = 0
+            for (i in 0 until countOfSub) {
+                log.append(msg.substring(index, index + LongLogConfig.MAX_LEN))
+                index += LongLogConfig.MAX_LEN
             }
-            if (index != len){
-                log.append(msg.substring(index,len));
+            if (index != len) {
+                log.append(msg.substring(index, len))
             }
-            Log.println(level,tag,log.toString());
-        }else {
-            Log.println(level,tag,msg);
+            Log.println(level, tag, log.toString())
+        } else {
+            Log.println(level, tag, msg)
         }
     }
 }

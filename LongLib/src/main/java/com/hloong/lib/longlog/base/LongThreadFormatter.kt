@@ -1,10 +1,7 @@
-package com.hloong.lib.longlog.base;
+package com.hloong.lib.longlog.base
 
-import com.hloong.lib.longlog.base.LongLogFormatter;
-
-public class LongThreadFormatter implements LongLogFormatter<Thread> {
-    @Override
-    public String format(Thread data) {
-        return "Thread:"+data.getName();
+class LongThreadFormatter : LongLogFormatter<Thread?> {
+    override fun format(data: Thread?): String? {
+        return "Thread:" + data!!.name
     }
 }

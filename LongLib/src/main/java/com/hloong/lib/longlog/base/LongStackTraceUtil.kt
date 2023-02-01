@@ -1,6 +1,8 @@
-package com.hloong.lib.longlog.base;
+package com.hloong.lib.longlog.base
 
-public class LongStackTraceUtil {
+import kotlin.math.min
+
+object LongStackTraceUtil {
     /**
      * To get clip stack information
      * @param stackTrace
@@ -8,8 +10,13 @@ public class LongStackTraceUtil {
      * @param maxDepth
      * @return
      */
-    public static StackTraceElement[] getCroppedRealStackTrack(StackTraceElement[] stackTrace,String ignorePackage,int maxDepth){
-        return cropStackTrace(getRealStackTrack(stackTrace,ignorePackage),maxDepth);
+    @JvmStatic
+    fun getCroppedRealStackTrack(
+        stackTrace: Array<StackTraceElement>,
+        ignorePackage: String?,
+        maxDepth: Int
+    ): Array<StackTraceElement?> {
+        return cropStackTrace(getRealStackTrack(stackTrace, ignorePackage), maxDepth)
     }
 
     /**
@@ -18,21 +25,24 @@ public class LongStackTraceUtil {
      * @param ignorePackage
      * @return
      */
-    private static StackTraceElement[] getRealStackTrack(StackTraceElement[] stackTrace,String ignorePackage){
-        int ignoreDepth = 0;
-        int allDepth = stackTrace.length;
-        String className;
-        for (int i = allDepth-1; i >=0 ; i--) {
-            className = stackTrace[i].getClassName();
-            if (ignorePackage != null && className.startsWith(ignorePackage)){
-                ignoreDepth = i + 1;
-                break;
+    private fun getRealStackTrack(
+        stackTrace: Array<StackTraceElement>,
+        ignorePackage: String?
+    ): Array<StackTraceElement?> {
+        var ignoreDepth = 0
+        val allDepth = stackTrace.size
+        var className: String
+        for (i in allDepth - 1 downTo 0) {
+            className = stackTrace[i].className
+            if (ignorePackage != null && className.startsWith(ignorePackage)) {
+                ignoreDepth = i + 1
+                break
             }
         }
-        int realDepth = allDepth - ignoreDepth;
-        StackTraceElement[] realStack = new StackTraceElement[realDepth];
-        System.arraycopy(stackTrace,ignoreDepth,realStack,0,realDepth);
-        return realStack;
+        val realDepth = allDepth - ignoreDepth
+        val realStack = arrayOfNulls<StackTraceElement>(realDepth)
+        System.arraycopy(stackTrace, ignoreDepth, realStack, 0, realDepth)
+        return realStack
     }
 
     /**
@@ -41,14 +51,16 @@ public class LongStackTraceUtil {
      * @param maxDepth
      * @return
      */
-    private static StackTraceElement[] cropStackTrace(StackTraceElement[] callStack,int maxDepth){
-       int realDepth = callStack.length;
-       if (maxDepth >0){
-           realDepth = Math.min(maxDepth,realDepth);
-       }
-       StackTraceElement[] realStack = new StackTraceElement[realDepth];
-       System.arraycopy(callStack,0,realStack,0,realDepth);
-       return realStack;
+    private fun cropStackTrace(
+        callStack: Array<StackTraceElement?>,
+        maxDepth: Int
+    ): Array<StackTraceElement?> {
+        var realDepth = callStack.size
+        if (maxDepth > 0) {
+            realDepth = min(maxDepth, realDepth)
+        }
+        val realStack = arrayOfNulls<StackTraceElement>(realDepth)
+        System.arraycopy(callStack, 0, realStack, 0, realDepth)
+        return realStack
     }
-
 }
