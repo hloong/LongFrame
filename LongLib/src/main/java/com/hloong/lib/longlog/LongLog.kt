@@ -1,113 +1,126 @@
-package com.hloong.lib.longlog;
+package com.hloong.lib.longlog
 
+import com.hloong.lib.longlog.LongLogManager.Companion.instance
+import com.hloong.lib.longlog.base.LongLogConfig
+import com.hloong.lib.longlog.base.LongLogType
+import com.hloong.lib.longlog.base.LongStackTraceUtil.getCroppedRealStackTrack
+import org.jetbrains.annotations.NotNull
+import java.util.*
 
-import com.hloong.lib.longlog.base.LongLogConfig;
-import com.hloong.lib.longlog.base.LongLogPrinter;
-import com.hloong.lib.longlog.base.LongLogType;
-import com.hloong.lib.longlog.base.LongStackTraceUtil;
+object LongLog {
+    private var LOG_PACKAGE: String? = null
 
-import org.jetbrains.annotations.NotNull;
-
-import java.util.Arrays;
-import java.util.List;
-
-public class LongLog {
-    public static void v(Object...  contents){
-        log(LongLogType.V,contents);
+    init {
+        val className = LongLog::class.java.name
+        LOG_PACKAGE = className.substring(
+            0,
+            className.lastIndexOf('.') + 1
+        )
     }
-    public static void vt(String tag,Object... contents){
-        log(LongLogType.V,tag,contents);
-    }
-    public static void d(Object...  contents){
-        log(LongLogType.D,contents);
-    }
-    public static void dt(String tag,Object... contents){
-        log(LongLogType.D,tag,contents);
-    }
-    public static void i(Object...  contents){
-        log(LongLogType.I,contents);
-    }
-    public static void it(String tag,Object... contents){
-        log(LongLogType.I,tag,contents);
-    }
-    public static void w(Object...  contents){
-        log(LongLogType.W,contents);
-    }
-    public static void wt(String tag,Object... contents){
-        log(LongLogType.W,tag,contents);
-    }
-    public static void e(Object...  contents){
-        log(LongLogType.E,contents);
-    }
-    public static void et(String tag,Object... contents){
-        log(LongLogType.E,tag,contents);
-    }
-    public static void a(Object...  contents){
-        log(LongLogType.A,contents);
-    }
-    public static void at(String tag,Object... contents){
-        log(LongLogType.A,tag,contents);
+    fun v(vararg contents: Any) {
+        log(LongLogType.V, *contents)
     }
 
-    private static final String LOG_PACKAGE;
-    static {
-        String className = LongLog.class.getName();
-        LOG_PACKAGE = className.substring(0,className.lastIndexOf('.')+1);
+    fun vt(tag: String, vararg contents: Any) {
+        log(LongLogType.V, tag, *contents)
     }
 
-    public static void log(@LongLogType.TYPE int type,Object... contents){
-        log(type,LongLogManager.getInstance().getConfig().getGlobalTag(),contents);
+    fun d(vararg contents: Any) {
+        log(LongLogType.D, *contents)
     }
-    public static void log(@LongLogType.TYPE int type, @NotNull String tag, Object... contents){
-        log(LongLogManager.getInstance().getConfig(),type,tag,contents);
+
+    fun dt(tag: String, vararg contents: Any) {
+        log(LongLogType.D, tag, *contents)
     }
-    public static void log(@NotNull LongLogConfig config, @LongLogType.TYPE int type, @NotNull String tag, Object... contents){
-        if (!config.enable()){
-            return;
+
+    fun i(vararg contents: Any) {
+        log(LongLogType.I, *contents)
+    }
+
+    fun it(tag: String, vararg contents: Any) {
+        log(LongLogType.I, tag, *contents)
+    }
+
+    fun w(vararg contents: Any) {
+        log(LongLogType.W, *contents)
+    }
+
+    fun wt(tag: String, vararg contents: Any) {
+        log(LongLogType.W, tag, *contents)
+    }
+
+    fun e(vararg contents: Any) {
+        log(LongLogType.E, *contents)
+    }
+
+    fun et(tag: String, vararg contents: Any) {
+        log(LongLogType.E, tag, *contents)
+    }
+
+    fun a(vararg contents: Any) {
+        log(LongLogType.A, *contents)
+    }
+
+    fun at(tag: String, vararg contents: Any) {
+        log(LongLogType.A, tag, *contents)
+    }
+
+
+
+    fun log(@LongLogType.TYPE type: Int, vararg contents: Any) {
+        log(type, instance!!.config.getGlobalTag(), *contents)
+    }
+
+    fun log(@LongLogType.TYPE type: Int, @NotNull tag: String, vararg contents: Any) {
+        log(instance!!.config, type, tag, *contents)
+    }
+
+    fun log(config: LongLogConfig, @LongLogType.TYPE type: Int, tag: String, vararg contents: Any) {
+        if (!config.enable()) {
+            return
         }
-        StringBuilder sb = new StringBuilder();
-        if (config.includeThread()){
-            String threadInfo = LongLogConfig.THREAD_FORMATTER.format(Thread.currentThread());
-            sb.append(threadInfo).append("\n");
+        val sb = StringBuilder()
+        if (config.includeThread()) {
+            val threadInfo = LongLogConfig.THREAD_FORMATTER.format(Thread.currentThread())
+            sb.append(threadInfo).append("\n")
         }
-        if (config.stackTraceDepth() > 0){
-            String stackTrace = LongLogConfig.STACK_TRACE_FORMATTER.format(
-                    LongStackTraceUtil.getCroppedRealStackTrack(new Throwable().getStackTrace(),
-                            LOG_PACKAGE,config.stackTraceDepth()));
-            sb.append(stackTrace).append("\n");
+        if (config.stackTraceDepth() > 0) {
+            val stackTrace = LongLogConfig.STACK_TRACE_FORMATTER.format(
+                getCroppedRealStackTrack(
+                    Throwable().stackTrace,
+                    LOG_PACKAGE, config.stackTraceDepth()
+                )
+            )
+            sb.append(stackTrace).append("\n")
         }
-        String body = parseBody(contents,config);
-        if (body != null) {//替换转义字符\
-            body = body.replace("\\\"", "\"");
+        var body = parseBody(config,*contents)
+        if (body != null) { //替换转义字符\
+            body = body.replace("\\\"", "\"")
         }
-        sb.append(body);
-        List<LongLogPrinter> printers =
-                config.printers() != null
-                ? Arrays.asList(config.printers())
-                : LongLogManager.getInstance().getPrinters();
-        if (printers == null){
-            return;
-        }
-        for (LongLogPrinter printer:printers){
-            printer.print(config,type,tag,sb.toString());
+        sb.append(body)
+        val printers =
+            (if (config.printers() != null) Arrays.asList(*config.printers()!!) else instance!!.getPrinters())
+                ?: return
+        for (printer in printers) {
+            printer!!.print(config, type, tag, sb.toString())
         }
     }
 
-    private static String parseBody(@NotNull Object[] contents,@NotNull LongLogConfig config){
-        if (config.injectJsonParser() != null){
-            if (contents.length == 1 && contents[0] instanceof String){
-                return (String)contents[0];
-            }
-            return config.injectJsonParser().toJson(contents);
+
+
+    private fun parseBody(config: LongLogConfig,vararg contents: Any): String {
+        if (config.injectJsonParser() != null) {
+            return if (contents.size == 1 && contents[0] is String) {
+                contents[0] as String
+            } else config.injectJsonParser()!!.toJson(contents)
         }
-        StringBuilder sb = new StringBuilder();
-        for (Object o: contents){
-            sb.append(o.toString()).append(";");
+        val sb = StringBuilder()
+        for (o in contents) {
+            sb.append(o.toString()).append(";")
         }
-        if (sb.length()>0){
-            sb.deleteCharAt(sb.length()-1);
+        if (sb.isNotEmpty()) {
+            sb.deleteCharAt(sb.length - 1)
         }
-        return sb.toString();
+        return sb.toString()
     }
 }
-

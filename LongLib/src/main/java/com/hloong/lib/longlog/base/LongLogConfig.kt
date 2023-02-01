@@ -1,10 +1,15 @@
 package com.hloong.lib.longlog.base
 
 abstract class LongLogConfig {
+    companion object {
+       const val MAX_LEN = 512
+        val THREAD_FORMATTER = LongThreadFormatter()
+        val STACK_TRACE_FORMATTER = LongStackTraceFormatter()
+    }
     open fun enable(): Boolean {
         return true
     }
-    open fun getGlobalTag(): String? {
+    open fun getGlobalTag(): String{
         return "LongLog"
     }
 
@@ -29,15 +34,8 @@ abstract class LongLogConfig {
     }
 
     interface JsonParser {
-        fun toJson(obj: Any?): String?
+        fun toJson(obj: Any): String
     }
 
-    companion object {
-        @JvmField
-        var MAX_LEN = 512
-        @JvmField
-        var THREAD_FORMATTER = LongThreadFormatter()
-        @JvmField
-        var STACK_TRACE_FORMATTER = LongStackTraceFormatter()
-    }
+
 }

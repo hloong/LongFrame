@@ -15,12 +15,12 @@ class LongApp:Application(){
         LongLogManager.init(object : LongLogConfig(){
             override fun injectJsonParser(): JsonParser? {
                 return object : JsonParser {
-                    override fun toJson(obj: Any?): String? {
+                    override fun toJson(obj: Any): String {
                         return Gson().toJson(obj)
                     }
                 }
             }
-            override fun getGlobalTag(): String? {
+            override fun getGlobalTag(): String {
                 return "LongApp"
             }
             override fun enable(): Boolean {
