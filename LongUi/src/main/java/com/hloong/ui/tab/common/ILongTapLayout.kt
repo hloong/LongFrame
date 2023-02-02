@@ -1,4 +1,4 @@
-package com.hloong.ui.tap.common
+package com.hloong.ui.tab.common
 
 import android.view.ViewGroup
 import androidx.annotation.Nullable

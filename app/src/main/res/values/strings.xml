@@ -1,3 +1,11 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">LongFrame</string>
+
+    <string name="if_home" tools:ignore="ExtraTranslation">&#xe8c6;</string>
+    <string name="if_recommend" tools:ignore="ExtraTranslation">&#xe63f;</string>
+    <string name="if_chat" tools:ignore="ExtraTranslation">&#xe63c;</string>
+    <string name="if_profile" tools:ignore="ExtraTranslation">&#xe634;</string>
+    <string name="if_category" tools:ignore="ExtraTranslation">&#xe600;</string>
+
+
 </resources>

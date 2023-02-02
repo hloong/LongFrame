@@ -1,4 +1,4 @@
-package com.hloong.ui.tap.bottom
+package com.hloong.ui.tab.bottom
 
 import android.content.Context
 import android.graphics.Color
@@ -8,10 +8,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.recyclerview.widget.RecyclerView
 import com.hloong.lib.util.DisplayUtil
+import com.hloong.lib.util.ViewUtil
 import com.hloong.ui.R
-import com.hloong.ui.tap.common.ILongTabLayout
-import com.hloong.ui.tap.common.ILongTabLayout.OnTabSelectedListener
+import com.hloong.ui.tab.common.ILongTabLayout
+import com.hloong.ui.tab.common.ILongTabLayout.OnTabSelectedListener
 
 class LongTabBottomLayout @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null
@@ -126,5 +128,15 @@ class LongTabBottomLayout @JvmOverloads constructor(
     }
     fun setTabHeight(height:Float){
         this.tabBottomHeight = height
+    }
+
+    fun fixContentView(){
+        if (getChildAt(0) !is ViewGroup){
+            return
+        }
+        var rootView = getChildAt(0) as ViewGroup
+        var targetView = ViewUtil.findTypeView(rootView,RecyclerView::class.java) as ViewGroup
+        if (targetView == null){
+        }
     }
 }

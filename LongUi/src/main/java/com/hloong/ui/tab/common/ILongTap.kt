@@ -1,6 +1,6 @@
-package com.hloong.ui.tap.common
+package com.hloong.ui.tab.common
 
-import com.hloong.ui.tap.common.ILongTabLayout.OnTabSelectedListener
+import com.hloong.ui.tab.common.ILongTabLayout.OnTabSelectedListener
 
 interface ILongTap<D> : OnTabSelectedListener<D> {
     fun setLongTapInfo(data:D)

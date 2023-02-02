@@ -1,7 +1,9 @@
 package com.hloong.frame
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.hloong.frame.tab.TabBottomActivity
 import com.hloong.lib.longlog.*
 import com.hloong.lib.longlog.base.LongLogConfig
 import com.hloong.lib.longlog.base.LongLogType
@@ -17,6 +19,10 @@ class MainActivity : AppCompatActivity() {
             printLog()
         }
         viewPrinter!!.viewPrinterProvider.showFloatingView()
+
+        tv_tab.setOnClickListener {
+            startActivity(Intent(this,TabBottomActivity::class.java))
+        }
     }
 
     private fun printLog(){

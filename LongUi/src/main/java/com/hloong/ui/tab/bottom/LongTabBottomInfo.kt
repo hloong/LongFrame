@@ -1,4 +1,4 @@
-package com.hloong.ui.tap.bottom
+package com.hloong.ui.tab.bottom
 
 import android.graphics.Bitmap
 import androidx.fragment.app.Fragment

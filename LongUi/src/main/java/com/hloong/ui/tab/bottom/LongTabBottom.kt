@@ -1,4 +1,4 @@
-package com.hloong.ui.tap.bottom
+package com.hloong.ui.tab.bottom
 
 import android.content.Context
 import android.graphics.Color
@@ -13,7 +13,7 @@ import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.annotation.Px
 import com.hloong.ui.R
-import com.hloong.ui.tap.common.ILongTap
+import com.hloong.ui.tab.common.ILongTap
 
 
 class LongTabBottom @JvmOverloads constructor(context: Context?, attrs: AttributeSet?=null, defStyleAttr: Int = 0) :
@@ -80,8 +80,13 @@ class LongTabBottom @JvmOverloads constructor(context: Context?, attrs: Attribut
                 if (init) {
                     tabImageView!!.visibility = GONE
                     tabIconView!!.visibility = VISIBLE
-                    val typeface = Typeface.createFromAsset(context.assets, tabInfo!!.iconFont)
-                    tabIconView!!.setTypeface(typeface)
+                    try {
+                        val typeface = Typeface.createFromAsset(context.assets, tabInfo!!.iconFont)
+                        tabIconView!!.setTypeface(typeface)
+                    }catch (e:java.lang.Exception){
+                        e.printStackTrace()
+                    }
+
                     if (!TextUtils.isEmpty(tabInfo!!.name)) {
                         tabNameView!!.text = tabInfo!!.name
                     }
