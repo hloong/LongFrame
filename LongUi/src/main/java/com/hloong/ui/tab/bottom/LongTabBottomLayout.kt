@@ -7,15 +7,18 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AbsListView
 import android.widget.FrameLayout
+import android.widget.ScrollView
 import androidx.recyclerview.widget.RecyclerView
+import com.hloong.lib.longlog.LongLog
 import com.hloong.lib.util.DisplayUtil
 import com.hloong.lib.util.ViewUtil
 import com.hloong.ui.R
 import com.hloong.ui.tab.common.ILongTabLayout
 import com.hloong.ui.tab.common.ILongTabLayout.OnTabSelectedListener
 
-class LongTabBottomLayout @JvmOverloads constructor(
+open class LongTabBottomLayout @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null
 ) : FrameLayout(context, attrs), ILongTabLayout<LongTabBottom?, LongTabBottomInfo<*>> {
 
@@ -36,7 +39,7 @@ class LongTabBottomLayout @JvmOverloads constructor(
 
 
     override fun findTab(data: LongTabBottomInfo<*>): LongTabBottom? {
-        var ll = findViewWithTag<ViewGroup>(TAG_TAB_BOTTOM)
+        val ll = findViewWithTag<ViewGroup>(TAG_TAB_BOTTOM)
         for (i in 0 until ll.childCount) {
             val child = ll.getChildAt(i)
             if (child is LongTabBottom) {
@@ -50,9 +53,15 @@ class LongTabBottomLayout @JvmOverloads constructor(
     }
 
     override fun addTabSelectedChangeListener(listener: OnTabSelectedListener<LongTabBottomInfo<*>>?) {
+        tabSelectedChangeListeners.add(listener!!)
     }
 
     override fun defaultSelected(defaultInfo: LongTabBottomInfo<*>) {
+        try {
+            onSelected(defaultInfo)
+        }catch (e:Exception){
+            e.printStackTrace()
+        }
     }
 
     override fun inflateInfo(infoList: List<LongTabBottomInfo<*>>) {
@@ -67,20 +76,21 @@ class LongTabBottomLayout @JvmOverloads constructor(
         selectedInfo = null
         addBackground()
         //清除之前添加的HiTabBottom listener，Tips：Java foreach remove问题
-        val iterator: MutableIterator<OnTabSelectedListener<LongTabBottomInfo<*>>> =
-            tabSelectedChangeListeners.iterator()
+        val iterator: MutableIterator<OnTabSelectedListener<LongTabBottomInfo<*>>> = tabSelectedChangeListeners.iterator()
         while (iterator.hasNext()) {
-            if (iterator.next() is OnTabSelectedListener<LongTabBottomInfo<*>>) {
+            if (iterator.next() is LongTabBottom) {
                 iterator.remove()
             }
         }
 
-        var ll = FrameLayout(context)
-        val with = DisplayUtil.getDisplayWidthInPx(context)
+        val ll = FrameLayout(context)
+        val width = DisplayUtil.getDisplayWidthInPx(context) / infoList.size
+        val height = DisplayUtil.dp2px(tabBottomHeight)
+        ll.tag = TAG_TAB_BOTTOM
         for (i in infoList.indices) {
-            val info: LongTabBottomInfo<*> = infoList[i]
+            var info: LongTabBottomInfo<*> = infoList[i]
             //Tips：为何不用LinearLayout：当动态改变child大小后Gravity.BOTTOM会失效
-            val params = LayoutParams(width, height)
+            var params = LayoutParams(width, height)
             params.gravity = Gravity.BOTTOM
             params.leftMargin = i * width
             var tabBottom = LongTabBottom(context)
@@ -89,21 +99,23 @@ class LongTabBottomLayout @JvmOverloads constructor(
             ll.addView(tabBottom, params)
             tabBottom.setOnClickListener { onSelected(info) }
         }
-        var flParams = LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT)
+        val flParams = LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT)
         flParams.gravity = Gravity.BOTTOM
         addBottomLine()
         addView(ll, flParams)
+        try {
+            fixContentView()
+        }catch (e :Exception){
+            e.printStackTrace()
+        }
     }
 
     private fun addBottomLine() {
         val bottomLine = View(context)
         bottomLine.setBackgroundColor(Color.parseColor(bottomLineColor))
-
-        val bottomLineParams = LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-            DisplayUtil.dp2px(bottomLineHeight, resources))
+        val bottomLineParams = LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, DisplayUtil.dp2px(bottomLineHeight, resources))
         bottomLineParams.gravity = Gravity.BOTTOM
-        bottomLineParams.bottomMargin =
-            DisplayUtil.dp2px(tabBottomHeight - bottomLineHeight, resources)
+        bottomLineParams.bottomMargin = DisplayUtil.dp2px(tabBottomHeight - bottomLineHeight, resources)
         addView(bottomLine, bottomLineParams)
         bottomLine.alpha = bottomAlpha
     }
@@ -116,7 +128,7 @@ class LongTabBottomLayout @JvmOverloads constructor(
     }
 
     private fun addBackground() {
-        var view = LayoutInflater.from(context).inflate(R.layout.long_bottom_layout_bg,null)
+        val view = LayoutInflater.from(context).inflate(R.layout.long_bottom_layout_bg,null)
         val params = LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, DisplayUtil.dp2px(tabBottomHeight,resources))
         params.gravity = Gravity.BOTTOM
         addView(view, params)
@@ -130,13 +142,37 @@ class LongTabBottomLayout @JvmOverloads constructor(
         this.tabBottomHeight = height
     }
 
+    fun resetHeight(height: Int){
+        val layoutParams = layoutParams
+        layoutParams.height = height
+        setLayoutParams(layoutParams)
+
+    }
+
     fun fixContentView(){
-        if (getChildAt(0) !is ViewGroup){
+        if (getChildAt(0) !is ViewGroup) {
             return
         }
         var rootView = getChildAt(0) as ViewGroup
-        var targetView = ViewUtil.findTypeView(rootView,RecyclerView::class.java) as ViewGroup
-        if (targetView == null){
+        LongLog.d(rootView)
+
+        var targetView: ViewGroup = ViewUtil.findTypeView(rootView, RecyclerView::class.java)!!
+        LongLog.d(targetView)
+        if (targetView == null) {
+            targetView = ViewUtil.findTypeView(rootView, ScrollView::class.java)!!
         }
+        if (targetView == null) {
+            targetView = ViewUtil.findTypeView(rootView, AbsListView::class.java)!!
+        }
+        if (targetView != null) {
+            targetView.setPadding(
+                0, 0, 0, DisplayUtil.dp2px(
+                    tabBottomHeight,
+                    resources
+                )
+            )
+            targetView.clipToPadding = false
+        }
+
     }
 }

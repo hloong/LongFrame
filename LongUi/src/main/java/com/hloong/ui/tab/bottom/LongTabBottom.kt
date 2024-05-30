@@ -16,7 +16,7 @@ import com.hloong.ui.R
 import com.hloong.ui.tab.common.ILongTap
 
 
-class LongTabBottom @JvmOverloads constructor(context: Context?, attrs: AttributeSet?=null, defStyleAttr: Int = 0) :
+open class LongTabBottom constructor(context: Context?, attrs: AttributeSet?=null, defStyleAttr: Int = 0) :
         RelativeLayout(context, attrs, defStyleAttr), ILongTap<LongTabBottomInfo<*>?> {
         private var tabInfo: LongTabBottomInfo<*>? = null
         private var tabImageView: ImageView? = null

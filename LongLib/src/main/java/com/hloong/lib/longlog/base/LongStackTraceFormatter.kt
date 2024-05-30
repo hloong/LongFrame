@@ -12,7 +12,7 @@ class LongStackTraceFormatter : LongLogFormatter<Array<StackTraceElement?>?> {
             val len = data.size
             while (i < len) {
                 if (i == 0) {
-                    sb.append("StackTrace:\n")
+                    sb.append("StackTrace: \n")
                 }
                 if (i != len - 1) {
                     sb.append("\t├ ")

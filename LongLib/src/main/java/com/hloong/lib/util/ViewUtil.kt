@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import java.util.*
 
 object ViewUtil {
-    fun <T> findTypeView(group: ViewGroup, cls: Class<T>): T? {
+     fun <T> findTypeView(group: ViewGroup, cls: Class<T>): T? {
         if (group == null) {
             return null
         }

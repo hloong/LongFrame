@@ -99,7 +99,10 @@ object LongLog {
         }
         sb.append(body)
         val printers =
-            (if (config.printers() != null) Arrays.asList(*config.printers()!!) else instance!!.getPrinters())
+            (if (config.printers() != null)
+                Arrays.asList(*config.printers()!!)
+            else
+                instance!!.getPrinters())
                 ?: return
         for (printer in printers) {
             printer!!.print(config, type, tag, sb.toString())

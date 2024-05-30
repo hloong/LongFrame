@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.hloong.ui.tab.bottom.LongTabBottomLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/tabLay"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -14,52 +12,59 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="120dp"
+                android:layout_marginBottom="10dp"
+                android:textColor="@android:color/white"
+                android:textSize="20sp"
+                android:text="@string/app_name"
+                android:background="@color/colorAccent"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:layout_marginBottom="10dp"
+                android:textColor="@android:color/white"
+                android:textSize="20sp"
+                android:text="@string/app_name"
+
+                android:background="@color/colorPrimary"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:text="@string/app_name"
+                android:layout_height="120dp"
+                android:layout_marginBottom="10dp"
+                android:textColor="@android:color/white"
+                android:textSize="20sp"
+                android:background="@color/colorAccent"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:layout_marginBottom="10dp"
+                android:text="@string/app_name"
+                android:textColor="@android:color/white"
+                android:textSize="20sp"
+                android:background="@color/colorPrimary"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:text="@string/app_name"
                 android:layout_marginBottom="10dp"
                 android:textColor="@android:color/white"
                 android:textSize="20sp"
                 android:background="@color/colorPrimary"
                 />
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="120dp"
                 android:layout_marginBottom="10dp"
                 android:textColor="@android:color/white"
+                android:text="@string/app_name"
                 android:textSize="20sp"
-                android:background="@color/colorPrimary"
-                />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="120dp"
-                android:layout_marginBottom="10dp"
-                android:textColor="@android:color/white"
-                android:textSize="20sp"
-                android:background="@color/colorPrimary"
-                />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="120dp"
-                android:layout_marginBottom="10dp"
-                android:textColor="@android:color/white"
-                android:textSize="20sp"
-                android:background="@color/colorPrimary"
-                />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="120dp"
-                android:layout_marginBottom="10dp"
-                android:textColor="@android:color/white"
-                android:textSize="20sp"
-                android:background="@color/colorPrimary"
-                />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="120dp"
-                android:layout_marginBottom="10dp"
-                android:textColor="@android:color/white"
-                android:textSize="20sp"
-                android:background="@color/colorPrimary"
+                android:background="@color/colorAccent"
                 />
 
 
