@@ -19,8 +19,8 @@ import com.hloong.ui.tab.common.ILongTabLayout
 import com.hloong.ui.tab.common.ILongTabLayout.OnTabSelectedListener
 
 open class LongTabBottomLayout @JvmOverloads constructor(
-    context: Context, attrs: AttributeSet? = null
-) : FrameLayout(context, attrs), ILongTabLayout<LongTabBottom?, LongTabBottomInfo<*>> {
+    context: Context, attrs: AttributeSet? = null,defStyleAttr:Int = 0
+) : FrameLayout(context, attrs,defStyleAttr), ILongTabLayout<LongTabBottom?, LongTabBottomInfo<*>> {
 
     private var tabSelectedChangeListeners = ArrayList<OnTabSelectedListener<LongTabBottomInfo<*>>>()
     private var selectedInfo: LongTabBottomInfo<*>? = null
@@ -73,6 +73,7 @@ open class LongTabBottomLayout @JvmOverloads constructor(
         for (i in childCount - 1 downTo 1) {//等价于  int i = getChildCount() - 1; i > 0; i--
             removeViewAt(i)
         }
+
         selectedInfo = null
         addBackground()
         //清除之前添加的HiTabBottom listener，Tips：Java foreach remove问题
@@ -156,13 +157,13 @@ open class LongTabBottomLayout @JvmOverloads constructor(
         var rootView = getChildAt(0) as ViewGroup
         LongLog.d(rootView)
 
-        var targetView: ViewGroup = ViewUtil.findTypeView(rootView, RecyclerView::class.java)!!
+        var targetView = ViewUtil.findTypeView(rootView, RecyclerView::class.java) as ViewGroup
         LongLog.d(targetView)
         if (targetView == null) {
-            targetView = ViewUtil.findTypeView(rootView, ScrollView::class.java)!!
+            targetView = ViewUtil.findTypeView(rootView, ScrollView::class.java) as ViewGroup
         }
         if (targetView == null) {
-            targetView = ViewUtil.findTypeView(rootView, AbsListView::class.java)!!
+            targetView = ViewUtil.findTypeView(rootView, AbsListView::class.java) as ViewGroup
         }
         if (targetView != null) {
             targetView.setPadding(

@@ -24,6 +24,7 @@ class MainActivity : AppCompatActivity() {
         tv_tab.setOnClickListener {
             startActivity(Intent(this,TabBottomActivity::class.java))
         }
+
     }
 
     private fun printLog(){

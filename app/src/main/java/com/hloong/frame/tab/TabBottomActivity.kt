@@ -33,7 +33,6 @@ class TabBottomActivity : AppCompatActivity() {
         list.add(b)
         list.add(home)
         list.add(recommend)
-        LongLog.d(list.size)
         tabLay.inflateInfo(list)
         tabLay.defaultSelected(home)
 
