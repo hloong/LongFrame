@@ -1,4 +1,4 @@
-package com.hloong.ui.tab.top
+package com.hloong.ui.common.tab
 
 import android.content.Context
 import android.util.AttributeSet
@@ -8,11 +8,11 @@ import androidx.fragment.app.Fragment
 class FragmentTabView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr:Int = 0
 ) : FrameLayout(context, attrs,defStyleAttr){
-    var mAdapter:TabViewAdapter ?= null
+    var mAdapter: TabViewAdapter?= null
     var currentPosition:Int = 0
 
 
-    fun getAdapter():TabViewAdapter{
+    fun getAdapter(): TabViewAdapter {
         return mAdapter!!
     }
 

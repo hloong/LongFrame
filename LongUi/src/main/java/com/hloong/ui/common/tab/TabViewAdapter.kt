@@ -1,18 +1,14 @@
-package com.hloong.ui.tab.top
+package com.hloong.ui.common.tab
 
-import android.view.View
 import android.view.ViewGroup
-import android.widget.Adapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
-import androidx.viewpager.widget.PagerAdapter
-import com.hloong.ui.tab.bottom.LongTabBottomInfo
+import com.hloong.ui.tab.bottom.TabBottomInfo
 
-class TabViewAdapter @JvmOverloads constructor(fragmentManager: FragmentManager, infoList:List<LongTabBottomInfo<*>>){
+class TabViewAdapter @JvmOverloads constructor(fragmentManager: FragmentManager, infoList:List<TabBottomInfo<*>>){
     var mCurFragment:Fragment? = null
     val  mFragmentManager:FragmentManager?=null
-     var mInfoList:List<LongTabBottomInfo<*>> = arrayListOf()
+     var mInfoList:List<TabBottomInfo<*>> = arrayListOf()
     fun getCount(): Int {
         return mInfoList.size
     }

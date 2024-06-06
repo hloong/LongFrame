@@ -1,31 +1,24 @@
 package com.hloong.frame
 
-import android.app.ActivityManager
 import android.content.res.Resources
-import android.content.res.Resources.Theme
 import android.graphics.BitmapFactory
 import android.view.View
-import android.widget.Toast
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
-import androidx.core.content.res.ResourcesCompat.ThemeCompat
 import androidx.fragment.app.FragmentManager
 import com.hloong.frame.fragment.HomeFragment
-import com.hloong.lib.longlog.LongLog
-import com.hloong.lib.util.DisplayUtil
-import com.hloong.ui.tab.bottom.LongTabBottomInfo
-import com.hloong.ui.tab.bottom.LongTabBottomLayout
-import com.hloong.ui.tab.common.ILongTabLayout
-import com.hloong.ui.tab.top.FragmentTabView
-import com.hloong.ui.tab.top.TabViewAdapter
-import kotlinx.android.synthetic.main.activity_tab_bottom.*
+import com.hloong.ui.tab.bottom.TabBottomInfo
+import com.hloong.ui.tab.bottom.TabBottomLayout
+import com.hloong.ui.tab.common.ITabLayout
+import com.hloong.ui.common.tab.FragmentTabView
+import com.hloong.ui.common.tab.TabViewAdapter
 
 open class TabBottomLogic constructor(activityProvider:ActivityProvider) {
-    var fragmentTabView:FragmentTabView?=null
+    var fragmentTabView: FragmentTabView?=null
     lateinit var activityProvider:ActivityProvider
     var currentItemIndex:Int =0
-    lateinit var tabBottomLayout:LongTabBottomLayout
-    private var infoList=ArrayList<LongTabBottomInfo<*>>()
+    lateinit var tabBottomLayout:TabBottomLayout
+    private var infoList=ArrayList<TabBottomInfo<*>>()
 
     init {
         this.activityProvider = activityProvider
@@ -39,11 +32,11 @@ open class TabBottomLogic constructor(activityProvider:ActivityProvider) {
         val defColor=activityProvider.getResources().getColor(R.color.tabDefaultColor)
         val tintColor = activityProvider.getResources().getColor(R.color.tabTintColor)
 
-        val home = LongTabBottomInfo("Home", "fonts/iconfont.ttf", activityProvider.getString(R.string.if_home),
+        val home = TabBottomInfo("Home", "fonts/iconfont.ttf", activityProvider.getString(R.string.if_home),
             null, defColor, tintColor)
         val bitmap = BitmapFactory.decodeResource(activityProvider.getResources(),R.mipmap.ic_launcher,null)
-        val b = LongTabBottomInfo<String>("cate",bitmap,bitmap)
-        val recommend=LongTabBottomInfo("Recommend", "fonts/iconfont.ttf",
+        val b = TabBottomInfo<String>("cate",bitmap,bitmap)
+        val recommend=TabBottomInfo("Recommend", "fonts/iconfont.ttf",
             activityProvider.getString(R.string.if_recommend), null,  defColor, tintColor)
 
         b.fragment = HomeFragment::class.java
@@ -55,8 +48,8 @@ open class TabBottomLogic constructor(activityProvider:ActivityProvider) {
 
         tabBottomLayout.inflateInfo(infoList)
         initFragmentTabView()
-        tabBottomLayout.addTabSelectedChangeListener(object: ILongTabLayout.OnTabSelectedListener<LongTabBottomInfo<*>>{
-            override fun onTabSelectedChange(index: Int, prevInfo: LongTabBottomInfo<*>, nextInfo: LongTabBottomInfo<*>) {
+        tabBottomLayout.addTabSelectedChangeListener(object: ITabLayout.OnTabSelectedListener<TabBottomInfo<*>>{
+            override fun onTabSelectedChange(index: Int, prevInfo: TabBottomInfo<*>, nextInfo: TabBottomInfo<*>) {
                 fragmentTabView!!.setCurrentItem(index)
                 currentItemIndex = index
             }

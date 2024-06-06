@@ -4,7 +4,7 @@ import android.view.ViewGroup
 import androidx.annotation.Nullable
 
 
-interface ILongTabLayout<Tab : ViewGroup?, D> {
+interface ITabLayout<Tab : ViewGroup?, D> {
     fun findTab(data: D): Tab
     fun addTabSelectedChangeListener(listener: OnTabSelectedListener<D>?)
     fun defaultSelected(defaultInfo: D)

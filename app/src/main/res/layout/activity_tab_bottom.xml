@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.hloong.ui.tab.bottom.LongTabBottomLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.hloong.ui.tab.bottom.TabBottomLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/tabLay"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <com.hloong.ui.tab.top.FragmentTabView
+    <com.hloong.ui.common.tab.FragmentTabView
         android:id="@+id/fragment_tab_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         >
 
 
-    </com.hloong.ui.tab.top.FragmentTabView>
-</com.hloong.ui.tab.bottom.LongTabBottomLayout>
+    </com.hloong.ui.common.tab.FragmentTabView>
+</com.hloong.ui.tab.bottom.TabBottomLayout>

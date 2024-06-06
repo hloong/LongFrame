@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.hloong.frame.tab.TabBottomActivity
+import com.hloong.frame.tab.TabTopActivity
 import com.hloong.lib.longlog.*
 import com.hloong.lib.longlog.base.LongLogConfig
 import com.hloong.lib.longlog.base.LongLogType
@@ -23,7 +24,9 @@ class MainActivity : AppCompatActivity() {
         tv_tab.setOnClickListener {
             startActivity(Intent(this,TabBottomActivity::class.java))
         }
-
+        tv_top.setOnClickListener {
+            startActivity(Intent(this,TabTopActivity::class.java))
+        }
     }
 
     private fun printLog(){

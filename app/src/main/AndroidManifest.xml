@@ -11,8 +11,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".kt.KotlinTestActivity"
+            android:name=".tab.TabTopActivity"
             android:exported="false" />
+
         <activity
             android:name=".tab.TabBottomActivity"
             android:exported="false" />
