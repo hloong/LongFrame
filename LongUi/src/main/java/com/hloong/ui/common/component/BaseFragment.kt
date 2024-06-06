@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 
-abstract class HBaseFragment(contentLayoutId: Int) : Fragment(contentLayoutId) {
+abstract class BaseFragment : Fragment() {
     var layoutView:View?=null
 
     abstract fun getLayoutId():Int

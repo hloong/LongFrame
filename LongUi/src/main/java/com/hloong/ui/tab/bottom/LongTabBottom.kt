@@ -82,7 +82,7 @@ open class LongTabBottom constructor(context: Context?, attrs: AttributeSet?=nul
                     tabIconView!!.visibility = VISIBLE
                     try {
                         val typeface = Typeface.createFromAsset(context.assets, tabInfo!!.iconFont)
-                        tabIconView!!.setTypeface(typeface)
+                        tabIconView!!.typeface = typeface
                     }catch (e:java.lang.Exception){
                         e.printStackTrace()
                     }

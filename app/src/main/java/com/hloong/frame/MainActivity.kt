@@ -17,7 +17,6 @@ class MainActivity : AppCompatActivity() {
         viewPrinter = LongViewPrinter(this)
         tv_log.setOnClickListener {
             printLog()
-            LongLog.d("for------>")
         }
         viewPrinter!!.viewPrinterProvider.showFloatingView()
 

@@ -23,7 +23,7 @@ open class LongTabBottomLayout @JvmOverloads constructor(
 ) : FrameLayout(context, attrs,defStyleAttr), ILongTabLayout<LongTabBottom?, LongTabBottomInfo<*>> {
 
     private var tabSelectedChangeListeners = ArrayList<OnTabSelectedListener<LongTabBottomInfo<*>>>()
-    private var selectedInfo: LongTabBottomInfo<*>? = null
+    private var selectedInfo:LongTabBottomInfo<*>?=null
     private var bottomAlpha = 1f
     //TabBottom高度
     private var tabBottomHeight = 50f
@@ -31,7 +31,7 @@ open class LongTabBottomLayout @JvmOverloads constructor(
     private val bottomLineHeight = 0.5f
     //TabBottom的头部线条颜色
     private val bottomLineColor = "#dfe0e1"
-    private var infoList: List<LongTabBottomInfo<*>>? = null
+    private var infoList = ArrayList<LongTabBottomInfo<*>>()
     companion object{
         const val TAG_TAB_BOTTOM = "TAG_TAB_BOTTOM"
 
@@ -52,23 +52,12 @@ open class LongTabBottomLayout @JvmOverloads constructor(
         return null
     }
 
-    override fun addTabSelectedChangeListener(listener: OnTabSelectedListener<LongTabBottomInfo<*>>?) {
-        tabSelectedChangeListeners.add(listener!!)
-    }
-
-    override fun defaultSelected(defaultInfo: LongTabBottomInfo<*>) {
-        try {
-            onSelected(defaultInfo)
-        }catch (e:Exception){
-            e.printStackTrace()
-        }
-    }
 
     override fun inflateInfo(infoList: List<LongTabBottomInfo<*>>) {
         if (infoList.isEmpty()){
             return
         }
-        this.infoList = infoList
+        this.infoList = infoList as ArrayList<LongTabBottomInfo<*>>
         // 移除之前已经添加的View
         for (i in childCount - 1 downTo 1) {//等价于  int i = getChildCount() - 1; i > 0; i--
             removeViewAt(i)
@@ -123,7 +112,11 @@ open class LongTabBottomLayout @JvmOverloads constructor(
 
     private fun onSelected(info: LongTabBottomInfo<*>) {
         for (listener in tabSelectedChangeListeners) {
-            listener.onTabSelectedChange(infoList!!.indexOf(info), selectedInfo!!, info)
+            try {
+                listener.onTabSelectedChange(infoList.indexOf(info), selectedInfo!!, info)
+            }catch (e:Exception){
+                e.printStackTrace()
+            }
         }
         selectedInfo = info
     }
@@ -136,6 +129,13 @@ open class LongTabBottomLayout @JvmOverloads constructor(
         view.alpha = bottomAlpha
     }
 
+    override fun addTabSelectedChangeListener(listener: OnTabSelectedListener<LongTabBottomInfo<*>>?) {
+        tabSelectedChangeListeners.add(listener!!)
+    }
+
+    override fun defaultSelected(defaultInfo: LongTabBottomInfo<*>) {
+        onSelected(defaultInfo)
+    }
     fun setTabAlpha(alpha:Float){
         this.bottomAlpha = alpha
     }
@@ -154,16 +154,14 @@ open class LongTabBottomLayout @JvmOverloads constructor(
         if (getChildAt(0) !is ViewGroup) {
             return
         }
-        var rootView = getChildAt(0) as ViewGroup
-        LongLog.d(rootView)
-
-        var targetView = ViewUtil.findTypeView(rootView, RecyclerView::class.java) as ViewGroup
-        LongLog.d(targetView)
+        var rootView = getChildAt(0) as ViewGroup ?: return
+        var targetView:ViewGroup?=null
+        targetView = ViewUtil.findTypeView(rootView, RecyclerView::class.java)
         if (targetView == null) {
-            targetView = ViewUtil.findTypeView(rootView, ScrollView::class.java) as ViewGroup
+            targetView = ViewUtil.findTypeView(rootView, ScrollView::class.java)
         }
         if (targetView == null) {
-            targetView = ViewUtil.findTypeView(rootView, AbsListView::class.java) as ViewGroup
+            targetView = ViewUtil.findTypeView(rootView, AbsListView::class.java)
         }
         if (targetView != null) {
             targetView.setPadding(
@@ -176,4 +174,6 @@ open class LongTabBottomLayout @JvmOverloads constructor(
         }
 
     }
+
+
 }
