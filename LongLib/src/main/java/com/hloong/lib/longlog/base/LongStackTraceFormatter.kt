@@ -1,9 +1,10 @@
 package com.hloong.lib.longlog.base
 
+
 class LongStackTraceFormatter : LongLogFormatter<Array<StackTraceElement?>?> {
     override fun format(data: Array<StackTraceElement?>?): String? {
-        val sb = StringBuilder(128)
-        return if (data != null || data!!.isEmpty()) {
+        var sb = StringBuilder(128)
+        return if (data == null || data!!.isEmpty()) {
             null
         } else if (data!!.size == 1) {
             "\t-" + data[0].toString()

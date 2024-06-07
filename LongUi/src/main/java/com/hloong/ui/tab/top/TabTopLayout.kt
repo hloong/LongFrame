@@ -17,8 +17,6 @@ open class TabTopLayout @JvmOverloads constructor(
 
     private var infoList = ArrayList<TabTopInfo<*>>()
 
-
-
     override fun findTab(data: TabTopInfo<*>): TabTop? {
         val ll = getRootLayout(false)
         for (i in 0 until ll.childCount) {
