@@ -1,7 +1,7 @@
 package com.hloong.frame.tab
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import com.hloong.frame.R
 import com.hloong.lib.longlog.LongLog
 import com.hloong.ui.tab.common.ITabLayout

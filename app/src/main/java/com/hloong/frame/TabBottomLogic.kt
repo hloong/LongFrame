@@ -76,6 +76,6 @@ open class TabBottomLogic constructor(activityProvider:ActivityProvider) {
 interface ActivityProvider{
     fun <T : View?> findViewById(@IdRes id: Int): T
     fun getResources():Resources
-    fun getSupportFragmentManager():FragmentManager
+    fun getSupportFragmentManager(): FragmentManager
     fun getString(@StringRes resId:Int):String
 }
