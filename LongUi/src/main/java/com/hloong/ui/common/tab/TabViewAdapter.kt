@@ -37,7 +37,11 @@ class TabViewAdapter @JvmOverloads constructor(fragmentManager: FragmentManager,
     }
 
     fun getItem(pos:Int): Fragment? {
-        mInfoList[pos].fragment!!.newInstance()
+        try {
+           return mInfoList[pos].fragment!!.newInstance()
+        }catch (e:Exception){
+            e.printStackTrace()
+        }
         return null
     }
 

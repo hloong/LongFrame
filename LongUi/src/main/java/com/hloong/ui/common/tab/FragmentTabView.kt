@@ -39,7 +39,7 @@ class FragmentTabView @JvmOverloads constructor(
     }
     fun getCurrentFragment():Fragment{
         if (mAdapter == null){
-            throw IllegalArgumentException("adatper null")
+            throw IllegalArgumentException("please call setAdapter first")
         }
         return mAdapter!!.getCurrentFragment()
     }

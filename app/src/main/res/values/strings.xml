@@ -5,6 +5,8 @@
     <string name="if_recommend" tools:ignore="ExtraTranslation">&#xe63f;</string>
     <string name="if_chat" tools:ignore="ExtraTranslation">&#xe63c;</string>
     <string name="if_profile" tools:ignore="ExtraTranslation">&#xe634;</string>
+
+    <string name="if_favorite">&#xe639;</string>
     <string name="if_category" tools:ignore="ExtraTranslation">&#xe600;</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment" tools:ignore="ExtraTranslation">Hello blank fragment</string>

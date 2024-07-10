@@ -6,7 +6,7 @@ import android.view.View
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import androidx.fragment.app.FragmentManager
-import com.hloong.frame.fragment.HomeFragment
+import com.hloong.frame.fragment.*
 import com.hloong.ui.tab.bottom.TabBottomInfo
 import com.hloong.ui.tab.bottom.TabBottomLayout
 import com.hloong.ui.tab.common.ITabLayout
@@ -32,19 +32,27 @@ open class TabBottomLogic constructor(activityProvider:ActivityProvider) {
         val defColor=activityProvider.getResources().getColor(R.color.tabDefaultColor)
         val tintColor = activityProvider.getResources().getColor(R.color.tabTintColor)
 
-        val home = TabBottomInfo("Home", "fonts/iconfont.ttf", activityProvider.getString(R.string.if_home),
-            null, defColor, tintColor)
-        val bitmap = BitmapFactory.decodeResource(activityProvider.getResources(),R.mipmap.ic_launcher,null)
-        val b = TabBottomInfo<String>("cate",bitmap,bitmap)
-        val recommend=TabBottomInfo("Recommend", "fonts/iconfont.ttf",
-            activityProvider.getString(R.string.if_recommend), null,  defColor, tintColor)
+        val home = TabBottomInfo("Home", "fonts/iconfont.ttf", activityProvider.getString(R.string.if_home), null, defColor, tintColor)
+        home.fragment = HomeFragment::class.java
 
-        b.fragment = HomeFragment::class.java
+        val bitmap = BitmapFactory.decodeResource(activityProvider.getResources(),R.mipmap.ic_launcher,null)
+        val category = TabBottomInfo<String>("cate",bitmap,bitmap)
+        category.fragment = CategoryFragment::class.java
+
+        val recommend=TabBottomInfo("Recommend", "fonts/iconfont.ttf", activityProvider.getString(R.string.if_recommend), null,  defColor, tintColor)
+        recommend.fragment = RecommendFragment::class.java
+
+        val favorite = TabBottomInfo("Favorite","fonts/iconfont.ttf",activityProvider.getString(R.string.if_favorite),null,defColor,tintColor)
+        favorite.fragment = FavoriteFragment::class.java
+
+        val profile = TabBottomInfo("profile","fonts/iconfont.ttf",activityProvider.getString(R.string.if_profile),null,defColor,tintColor)
+        profile.fragment = ProfileFragment::class.java
+
         infoList.add(home)
         infoList.add(recommend)
-        infoList.add(b)
-        infoList.add(home)
-        infoList.add(recommend)
+        infoList.add(category)
+        infoList.add(favorite)
+        infoList.add(profile)
 
         tabBottomLayout.inflateInfo(infoList)
         initFragmentTabView()
