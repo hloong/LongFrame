@@ -59,7 +59,10 @@ open class TabTopLayout @JvmOverloads constructor(
     }
 
     private fun getRootLayout(clear:Boolean):LinearLayout{
-        var rootView = getChildAt(0) as LinearLayout
+        var rootView:LinearLayout ?= null
+        if (getChildAt(0) != null){
+            rootView = getChildAt(0) as LinearLayout
+        }
         if (rootView == null){
             rootView = LinearLayout(context)
             rootView.orientation = LinearLayout.HORIZONTAL
