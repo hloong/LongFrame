@@ -1,12 +1,15 @@
 package com.hloong.ui.tab.top
 
 import android.content.Context
+import android.graphics.Rect
 import android.util.AttributeSet
 import android.view.Gravity
 import android.widget.HorizontalScrollView
 import android.widget.LinearLayout
+import com.hloong.lib.util.DisplayUtil
 import com.hloong.ui.tab.common.ITabLayout
 import com.hloong.ui.tab.common.ITabLayout.OnTabSelectedListener
+import kotlin.math.abs
 
 open class TabTopLayout @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null,defStyleAttr:Int = 0
@@ -14,9 +17,9 @@ open class TabTopLayout @JvmOverloads constructor(
 
     private var tabSelectedChangeListeners = ArrayList<OnTabSelectedListener<TabTopInfo<*>>>()
     private var selectedInfo:TabTopInfo<*>?=null
+    private var tabWith:Int = 0
 
     private var infoList = ArrayList<TabTopInfo<*>>()
-
     override fun findTab(data: TabTopInfo<*>): TabTop? {
         val ll = getRootLayout(false)
         for (i in 0 until ll.childCount) {
@@ -76,15 +79,16 @@ open class TabTopLayout @JvmOverloads constructor(
     }
 
 
-    private fun onSelected(info: TabTopInfo<*>) {
+    private fun onSelected(nextInfo: TabTopInfo<*>) {
         for (listener in tabSelectedChangeListeners) {
             try {
-                listener.onTabSelectedChange(infoList.indexOf(info), selectedInfo!!, info)
+                listener.onTabSelectedChange(infoList.indexOf(nextInfo), selectedInfo!!, nextInfo)
             }catch (e:Exception){
                 e.printStackTrace()
             }
         }
-        selectedInfo = info
+        selectedInfo = nextInfo
+        autoScroll(nextInfo)
     }
 
 
@@ -97,5 +101,60 @@ open class TabTopLayout @JvmOverloads constructor(
         onSelected(defaultInfo)
     }
 
+    private fun autoScroll(nextInfo:TabTopInfo<*>){
+        var tabTop = findTab(nextInfo)
+        if (tabTop == null) return
+        val index = infoList.indexOf(nextInfo)
+        var loc = IntArray(2)
+        tabTop.getLocationInWindow(loc)
+        if (tabWith == 0){
+            tabWith = tabTop.width
+        }
+        var scrollWidth=0
+        if ((loc[0]+tabWith/2) > DisplayUtil.getDisplayWidthInPx(context)/2){
+            scrollWidth = rangeScrollWidth(index,2)
+        }else{
+            scrollWidth = rangeScrollWidth(index,-2)
+        }
+        scrollTo(scrollX+scrollWidth,0)
+    }
 
+    private fun rangeScrollWidth(index: Int, range: Int): Int {
+        var scrollWidth = 0
+        for (i in 0..abs(range)){
+            var next:Int = if (range<0){
+                range+i+index
+            }else{
+                range-i+index
+            }
+            if (next>=0 && next<infoList.size){
+                if (range<0){
+                    scrollWidth -= scrollWidth(next, false)
+                }else{
+                    scrollWidth += scrollWidth(next,false)
+                }
+            }
+        }
+        return scrollWidth
+    }
+    private fun scrollWidth(index:Int,toRight:Boolean):Int{
+        var target = findTab(infoList.get(index))
+        if (target == null ) return 0
+        var rect = Rect()
+        target.getLocalVisibleRect(rect)
+        if (toRight){
+            if (rect.right>tabWith){
+                return tabWith
+            }else{
+                return tabWith-rect.right
+            }
+        }else{
+            if (rect.right <= -tabWith){
+                return tabWith
+            }else if(rect.left > 0){
+                return rect.left
+            }
+            return 0
+        }
+    }
 }

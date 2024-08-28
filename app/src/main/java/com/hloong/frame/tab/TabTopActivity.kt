@@ -1,6 +1,7 @@
 package com.hloong.frame.tab
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.hloong.frame.R
 import com.hloong.lib.longlog.LongLog
@@ -35,6 +36,7 @@ class TabTopActivity : AppCompatActivity() {
                 nextInfo: TabTopInfo<*>
             ) {
                 LongLog.d("index-->"+index+"--"+prevInfo.name)
+                Toast.makeText(this@TabTopActivity,nextInfo.name,Toast.LENGTH_SHORT).show()
             }
         })
         tab_top.defaultSelected(infoList[0])
