@@ -3,6 +3,7 @@ package com.hloong.frame
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.hloong.frame.refresh.RefreshActivity
 import com.hloong.frame.tab.TabBottomActivity
 import com.hloong.frame.tab.TabTopActivity
 import com.hloong.lib.longlog.*
@@ -26,6 +27,9 @@ class MainActivity : AppCompatActivity() {
         }
         tv_top.setOnClickListener {
             startActivity(Intent(this,TabTopActivity::class.java))
+        }
+        tv_refresh.setOnClickListener {
+            startActivity(Intent(this,RefreshActivity::class.java))
         }
     }
 

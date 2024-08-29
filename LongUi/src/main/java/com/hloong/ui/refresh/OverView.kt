@@ -17,6 +17,10 @@ abstract class OverView @JvmOverloads
             /**
              * 超出可刷新距离的状态
              */
+            OVER,
+            /**
+             * 超出可刷新距离的状态
+             */
             REFRESH,
             /**
              * 超出可刷新位置松开手后的状态
@@ -53,12 +57,12 @@ abstract class OverView @JvmOverloads
      */
     abstract fun init()
 
-    protected abstract fun onScroll(scrollY: Int, pullRefreshHeight: Int)
+     abstract fun onScroll(scrollY: Int, pullRefreshHeight: Int)
 
     /**
      * 显示Overlay
      */
-    protected abstract fun onVisible()
+     abstract fun onVisible()
 
     /**
      * 超过Overlay，释放就会加载
