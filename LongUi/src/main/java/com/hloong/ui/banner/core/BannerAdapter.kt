@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.viewpager.widget.PagerAdapter
 
-class BannerAdapter: PagerAdapter() {
+class BannerAdapter: PagerAdapter {
 
     private var mContext: Context ?= null
     private var mCachedViews = SparseArray<BannerViewHolder>()
@@ -26,7 +26,7 @@ class BannerAdapter: PagerAdapter() {
     private var mLoop = false
     private var mLayoutResId = -1
 
-    fun BannerAdapter(mContext: Context) {
+    constructor(mContext: Context) {
         this.mContext = mContext
     }
     fun setBannerData(models: List<BannerModel?>) {
@@ -98,7 +98,7 @@ class BannerAdapter: PagerAdapter() {
     }
 
     override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
-        super.destroyItem(container, position, `object`)
+
     }
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {

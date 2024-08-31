@@ -31,6 +31,9 @@ class MainActivity : AppCompatActivity() {
         tv_refresh.setOnClickListener {
             startActivity(Intent(this,RefreshActivity::class.java))
         }
+        tv_banner.setOnClickListener {
+            startActivity(Intent(this,BannerActivity::class.java))
+        }
     }
 
     private fun printLog(){

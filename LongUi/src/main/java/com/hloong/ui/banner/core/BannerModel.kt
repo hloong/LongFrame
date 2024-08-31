@@ -1,5 +1,7 @@
 package com.hloong.ui.banner.core
 
-abstract class BannerModel {
+ class BannerModel {
     var url: String? = null
+
+
 }
